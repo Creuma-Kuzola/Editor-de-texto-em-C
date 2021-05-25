@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #define MAX 80
 #define NOT_FOUND -1 // Item não existe
 #define OK 0 // Operação realizada com sucesso
@@ -12,7 +13,7 @@ typedef struct TInfo
 {
     char frase[MAX];
     Boolean linhaCorrente;
-    
+    int numLinha;
 }TInfo;
 
 
@@ -29,6 +30,41 @@ typedef struct TDLEnc{
     TAtomo *primeiro;
 
 }TDLEnc;
+
+int ehMinuscula(char c)
+{
+    if(c>='a' && c<='z') return 1;
+    return 0;
+}
+
+int numInstrucao( char instrucao[]){
+
+    if(strcmp(instrucao,"$inserir") == 0){
+        return 1;
+    }
+    if(strcmp(instrucao,"$remover")  == 0){
+        return 2;
+    }
+    if(strcmp(instrucao,"$linha")  == 0){
+        return 3;
+    }
+    if(strcmp(instrucao,"$localizar") == 0){
+        return 4;
+    }
+    if(strcmp(instrucao,"$alterar") == 0){
+        return 5;
+    }
+    if(strcmp(instrucao,"$ultimo") == 0){
+        return 6;
+    }
+    if(strcmp(instrucao,"$imprimir") == 0){
+        return 7;
+    }
+    if(strcmp(instrucao,"$fim") == 0){
+        return 8;
+    }
+    return 0;
+}
 
 void criarLista(TDLEnc *lista){
 
@@ -76,7 +112,24 @@ int inserirElemento(TDLEnc *lista, TInfo info){
 
 
 int main (){
+    char instrucao[MAX];
+    int num = -1;
+     printf("Entre com a instrucao\n");
+    while(num != 0){
 
+        scanf("%[^\n]", instrucao);
+        num = numInstrucao(instrucao);
+        printf("%d", num);
+        if(num == 0){
+            break;
+        }
+        else{
+        scanf("%[^\n]", instrucao);
+        num = numInstrucao(instrucao);
 
+        }    
 
+    }
+    printf("Sai\n");
+    
 }
