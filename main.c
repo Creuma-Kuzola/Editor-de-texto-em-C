@@ -61,9 +61,9 @@ int numInstrucao( char instrucao[]){
         return 7;
     }
     if(strcmp(instrucao,"$fim") == 0){
-        return 8;
+        return 0;
     }
-    return 0;
+    return -1;
 }
 
 void criarLista(TDLEnc *lista){
@@ -110,24 +110,38 @@ int inserirElemento(TDLEnc *lista, TInfo info){
     return OK;
 }
 
+//void pegarInstrucao(char inst[], )
 
 int main (){
-    char instrucao[MAX];
-    int num = -1;
-     
+    char instrucao[10];
+    char frase[MAX];
+    int num = -2;
+    TDLEnc *lista;
+    //char instCopy[MAX];
     while(num != 0){
+        printf("Entre com a instrucao\n");
+        //fgets(instrucao,sizeof(instrucao),stdin);
+        //scanf("%[^\n]", instrucao);
+        scanf("%s", instrucao);
+        printf("Instrucao: %s", instrucao);
+        //strcpy(instCopy, instrucao);
+        //printf("%s", instCopy);
+        num = numInstrucao(instrucao);
+        printf("%d\n", num);
 
+        if(num == -1){
+            printf("Instrucao invalida\n");
+        }
         if(num == 0){
             break;
         }
-        else{
-            printf("Entre com a instrucao\n");
-            scanf("%s", instrucao);
-            num = numInstrucao(instrucao);
-            printf("%d", num);
+        if(num == 1){
+            
+         
+           
         }    
 
     }
     printf("Sai\n");
-    
+    return 0;
 }
