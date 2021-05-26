@@ -114,19 +114,17 @@ int inserirElemento(TDLEnc *lista, TInfo info){
 int main (){
     char instrucao[MAX];
     int num = -1;
-     printf("Entre com a instrucao\n");
+     
     while(num != 0){
 
-        scanf("%[^\n]", instrucao);
-        num = numInstrucao(instrucao);
-        printf("%d", num);
         if(num == 0){
             break;
         }
         else{
-        scanf("%[^\n]", instrucao);
-        num = numInstrucao(instrucao);
-
+            printf("Entre com a instrucao\n");
+            scanf("%s", instrucao);
+            num = numInstrucao(instrucao);
+            printf("%d", num);
         }    
 
     }
