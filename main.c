@@ -1,11 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdio_ext.h>
 #define MAX 80
 #define NOT_FOUND -1 // Item não existe
 #define OK 0 // Operação realizada com sucesso
 #define LIST_EMPTY 2 // Lista vazia
 #define NO_SPACE 3 // Não há espaço de memória
+#define ERROR 4 // Não há espaço de memória 
 
 typedef enum Boolean{FALSE = 0, TRUE = 1}Boolean;
 
@@ -15,7 +17,6 @@ typedef struct TInfo
     Boolean linhaCorrente;
     int numLinha;
 }TInfo;
-
 
 typedef struct TAtomo
 {
@@ -78,6 +79,7 @@ Boolean vaziaLista(TDLEnc *lista){
 
 void imprimirLista(TDLEnc *lista){
 
+    printf("Entrei em imprimir");
     for(TAtomo *paux = lista->primeiro; paux->dprox != lista->primeiro; paux = paux ->dprox){
         printf("%s\n", paux->info.frase);
     }
@@ -110,38 +112,50 @@ int inserirElemento(TDLEnc *lista, TInfo info){
     return OK;
 }
 
-//void pegarInstrucao(char inst[], )
+int pegarInstrucao(char st[], char instrucao[])
+{
+    if(st[0]!= '$')return ERROR;
+
+    for(int i=0; st[i]!= "/0"; i++){
+
+
+    }
+}
 
 int main (){
+
     char instrucao[10];
-    char frase[MAX];
+    TInfo info;
     int num = -2;
-    TDLEnc *lista;
-    //char instCopy[MAX];
+    TDLEnc lista;
+    char string[80];
+    criarLista(&lista);
+    
     while(num != 0){
+
         printf("Entre com a instrucao\n");
-        //fgets(instrucao,sizeof(instrucao),stdin);
-        //scanf("%[^\n]", instrucao);
-        scanf("%s", instrucao);
-        printf("Instrucao: %s", instrucao);
-        //strcpy(instCopy, instrucao);
-        //printf("%s", instCopy);
+        scanf("%[^\n]", string);
+        __fpurge(stdin);
+
         num = numInstrucao(instrucao);
-        printf("%d\n", num);
+        printf("Num: %d\n", num);
 
         if(num == -1){
             printf("Instrucao invalida\n");
         }
-        if(num == 0){
+         if(num == 0){
             break;
-        }
+        } 
         if(num == 1){
-            
-         
-           
-        }    
+
+         inserirElemento(&lista,info);
+         imprimirLista(&lista);
+         printf("Entrei\n");
+        }
+       
 
     }
+    //imprimirLista(&lista);
     printf("Sai\n");
     return 0;
 }
