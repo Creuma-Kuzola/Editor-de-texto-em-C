@@ -21,14 +21,15 @@ typedef struct TInfo
 typedef struct TAtomo
 {
     TInfo info;
-    struct TAtomo *eprox;
-    struct TAtomo *dprox;
+    struct TAtomo *seguinte;
+    struct TAtomo *anterior;
     
 }TAtomo;
 
 typedef struct TDLEnc{
 
     TAtomo *primeiro;
+    int numElem;
 
 }TDLEnc;
 
@@ -70,17 +71,18 @@ int numInstrucao( char instrucao[]){
 void criarLista(TDLEnc *lista){
 
     lista->primeiro = NULL;
+    lista->numElem = 0;
 }
 
 Boolean vaziaLista(TDLEnc *lista){
 
-    return (lista->primeiro == NULL);
+    return (lista->primeiro == NULL && lista->numElem == 0);
 }
 
 void imprimirLista(TDLEnc *lista){
 
     printf("Entrei em imprimir");
-    for(TAtomo *paux = lista->primeiro; paux->dprox != lista->primeiro; paux = paux ->dprox){
+    for(TAtomo *paux = lista->primeiro; paux->seguinte != lista->primeiro; paux = paux->seguinte){
         printf("%s\n", paux->info.frase);
     }
     printf("\n");
@@ -88,27 +90,28 @@ void imprimirLista(TDLEnc *lista){
 
 Boolean listaUnitaria(TDLEnc *lista){
 
-    return (lista->primeiro != NULL && lista->primeiro->dprox == NULL);
+    return (lista->primeiro != NULL && lista->numElem == 1);
 }
 
-int inserirElemento(TDLEnc *lista, TInfo info){
+int inserirElemento(TDLEnc *lista, char st[], TAtomo *pnovo){
 
-    TAtomo *pnovo = (TAtomo*) malloc(sizeof(TAtomo));
-    if(pnovo == NULL) return NO_SPACE;
-    pnovo->info = info;
+    strcpy(pnovo->info.frase, st);
+    printf("String em inserir: %s",pnovo->info.frase);
+    lista->numElem++;
+    pnovo->info.numLinha = lista->numElem;
     if(vaziaLista(lista)){
+        pnovo->seguinte = pnovo->anterior = NULL;
         lista->primeiro = pnovo;
     }
     if(listaUnitaria(lista)){
-        lista->primeiro->dprox = pnovo;
+        pnovo->seguinte=pnovo->anterior = lista->primeiro;
+        lista->primeiro->seguinte = lista->primeiro->anterior = pnovo;  
     }
     else{
-
-        pnovo->eprox = lista->primeiro->eprox;
-        pnovo->dprox = lista->primeiro;
+        pnovo->anterior = lista->primeiro->anterior;
+        pnovo->seguinte = lista->primeiro;
+        lista->primeiro->anterior = pnovo;
     }
-
-    lista->primeiro->eprox = pnovo;
     return OK;
 }
 
@@ -116,7 +119,7 @@ int pegarInstrucao(char st[], char instrucao[])
 {
     if(st[0]!= '$')return ERROR;
 
-    for(int i=0; st[i]!= "/0"; i++){
+    for(int i=0; st[i]!= '\0'; i++){
 
 
     }
@@ -130,14 +133,15 @@ int main (){
     TDLEnc lista;
     char string[80];
     criarLista(&lista);
+    int flagInsercao = 0;
     
     while(num != 0){
 
         printf("Entre com a instrucao\n");
         scanf("%[^\n]", string);
-        __fpurge(stdin);
+         __fpurge(stdin);
 
-        num = numInstrucao(instrucao);
+        num = numInstrucao(string);
         printf("Num: %d\n", num);
 
         if(num == -1){
@@ -147,13 +151,29 @@ int main (){
             break;
         } 
         if(num == 1){
-
-         inserirElemento(&lista,info);
-         imprimirLista(&lista);
-         printf("Entrei\n");
+            flagInsercao = 1;
         }
-       
+        if(num == 2){
+            flagInsercao = 0;
+        }
 
+        if(flagInsercao == 1){
+
+            while (num == 1)
+            {
+               scanf("%[^\n]", string);
+                 __fpurge(stdin);
+               TAtomo *pnovo = (TAtomo*) malloc(sizeof(TAtomo));
+               if(pnovo == NULL){
+                    printf("E null");
+                    return NO_SPACE;
+                }
+                inserirElemento(&lista,string, pnovo);
+                imprimirLista(&lista);
+                 printf("Entrei\n");   
+            }
+        
+        }
     }
     //imprimirLista(&lista);
     printf("Sai\n");
