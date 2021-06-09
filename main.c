@@ -83,7 +83,7 @@ Boolean listaUnitaria(TDLEnc *lista){
 
 void imprimirLista(TDLEnc *lista){
 
-    for(TAtomo *paux = lista->primeiro; paux != lista->ultimo; paux = paux->seguinte)
+    for(TAtomo *paux = lista->primeiro; paux != NULL; paux = paux->seguinte)
     {
         printf("%d %s\n",paux->info.numLinha, paux->info.frase);
     }
@@ -147,18 +147,19 @@ int main (){
         scanf("%[^\n]", string);
          __fpurge(stdin);
 
-        num = numInstrucao(string);
-        printf("Num: %d\n", num);
+        num: num = numInstrucao(string);
+        printf("Num: %d\n",num);
 
         if(num == -1){
             printf("Instrucao invalida\n");
         }
-         if(num == 0){
+        if(num == 0){
             break;
         } 
         if(num == 1){
             flagInsercao = 1;
         }
+
         if(flagInsercao == 1){
 
             while (num == 1)
@@ -176,6 +177,7 @@ int main (){
                     printf("Saindo do modo de insercao\n");
                     flagInsercao = 0;
                     imprimirLista(&lista);
+                    goto num;
                     break;
                 }
                 else{
@@ -186,30 +188,10 @@ int main (){
             
         }
 
-
-        /*if(num == 2){
-            flagInsercao = 0;
-        }
-
-        if(flagInsercao == 1){
-
-            while (num == 1)
-            {
-               scanf("%[^\n]", string);
-                 __fpurge(stdin);
-               TAtomo *pnovo = (TAtomo*) malloc(sizeof(TAtomo));
-               if(pnovo == NULL){
-                    printf("E null");
-                    return NO_SPACE;
-                }
-                inserirElemento(&lista,string, pnovo);
-                imprimirLista(&lista);
-                 printf("Entrei\n");   
-            }
-        
-        }*/
+   
     }
-    //imprimirLista(&lista);
-    printf("Sai\n");
+
+
     return 0;
+
 }
