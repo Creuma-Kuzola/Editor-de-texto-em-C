@@ -75,7 +75,6 @@ Boolean vaziaLista(TDLEnc *lista){
     return (lista->primeiro == NULL &&  lista->ultimo == NULL && lista->numElem == 0);
 }
 
-
 Boolean listaUnitaria(TDLEnc *lista){
 
     return (lista->primeiro != NULL && lista->ultimo != NULL && lista->numElem == 1);
@@ -87,6 +86,45 @@ void imprimirLista(TDLEnc *lista){
     {
         printf("%d %s\n",paux->info.numLinha, paux->info.frase);
     }
+}
+
+void imprimirLinhaMAteN(TDLEnc *lista, int m, int n){
+
+    if(lista != NULL){
+
+        if(m >= 1 && n <= lista->ultimo->info.numLinha){
+           
+            for(TAtomo *paux = lista->primeiro; paux != NULL; paux = paux->seguinte)
+            {
+                if( paux->info.numLinha >= m && paux->info.numLinha <= n){
+                    printf("%d %s\n",paux->info.numLinha, paux->info.frase);
+                }
+                
+            }
+        }
+        else if(m < 1){
+            printf("Erro: o M é menor do que 1\n");
+        }
+        else if(n > lista->ultimo->info.numLinha){
+            printf("Erro: o N é maior do o que número da última linha\n");
+        }
+        
+    }
+    else{
+        printf("Erro: Lista Vazia");
+    }
+    
+}
+
+void imprimirUltimo(TDLEnc *lista){
+
+    if(lista != NULL){
+        printf("%d %s\n", lista->ultimo->info.numLinha, lista->ultimo->info.frase);
+    }
+    else{
+        printf("Erro: Lista Vazia");
+    }
+    
 }
 
 int inserirElemento(TDLEnc *lista, char st[]){
@@ -111,8 +149,6 @@ int inserirElemento(TDLEnc *lista, char st[]){
     return OK;
 }
 
-
-
 int ehCaracterValido(char st[]){
 
     for(int i=0; st[i] != '\0';i++)
@@ -128,6 +164,19 @@ int ehCaracterValido(char st[]){
        
     }
     return OK;
+
+}
+
+void linha(TDLEnc *lista,int n ){
+
+    for(TAtomo *paux= lista->primeiro; paux != NULL; paux = paux->seguinte)
+    {
+        if(paux->info.numLinha == n)
+        {
+            paux->info.linhaCorrente = TRUE;
+            break;
+        } 
+    }
 
 }
 
@@ -158,6 +207,12 @@ int main (){
         } 
         if(num == 1){
             flagInsercao = 1;
+        }
+        if(num == 3){
+            
+        }
+        if(num == 6){
+            imprimirUltimo(&lista);
         }
 
         if(flagInsercao == 1){
@@ -190,7 +245,6 @@ int main (){
 
    
     }
-
 
     return 0;
 
