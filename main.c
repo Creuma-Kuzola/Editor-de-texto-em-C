@@ -2,36 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio_ext.h>
-#define MAX 80
-#define NOT_FOUND -1 // Item não existe
-#define OK 0 // Operação realizada com sucesso
-#define LIST_EMPTY 2 // Lista vazia
-#define NO_SPACE 3 // Não há espaço de memória
-#define ERROR 4 // Não há espaço de memória 
-
-typedef enum Boolean{FALSE = 0, TRUE = 1}Boolean;
-
-typedef struct TInfo
-{
-    char frase[MAX];
-    Boolean linhaCorrente;
-    int numLinha;
-}TInfo;
-
-typedef struct TAtomo
-{
-    TInfo info;
-    struct TAtomo *seguinte;
-    struct TAtomo *anterior;
-    
-}TAtomo;
-
-typedef struct TDLEnc{
-
-    TAtomo *primeiro;
-    int numElem;
-
-}TDLEnc;
+#include "tad.h"
+#include <ctype.h>
 
 int ehMinuscula(char c)
 {
@@ -41,88 +13,122 @@ int ehMinuscula(char c)
 
 int numInstrucao( char instrucao[]){
 
-    if(strcmp(instrucao,"$inserir") == 0){
-        return 1;
-    }
-    if(strcmp(instrucao,"$remover")  == 0){
-        return 2;
-    }
-    if(strcmp(instrucao,"$linha")  == 0){
-        return 3;
-    }
-    if(strcmp(instrucao,"$localizar") == 0){
-        return 4;
-    }
-    if(strcmp(instrucao,"$alterar") == 0){
-        return 5;
-    }
-    if(strcmp(instrucao,"$ultimo") == 0){
-        return 6;
-    }
-    if(strcmp(instrucao,"$imprimir") == 0){
-        return 7;
-    }
-    if(strcmp(instrucao,"$fim") == 0){
-        return 0;
+    if(instrucao[0] == '$'){
+        
+        if(strcmp(instrucao,"$inserir") == 0){
+            return 1;
+        }
+
+        if(strcmp(instrucao,"$remover")  == 0){
+            return 2;
+        }
+
+        if(strcmp(instrucao,"$linha")  == 0){
+            return 3;
+        }
+
+        if(strcmp(instrucao,"$localizar") == 0){
+            return 4;
+        }
+
+        if(strcmp(instrucao,"$alterar") == 0){
+            return 5;
+        }
+
+        if(strcmp(instrucao,"$ultimo") == 0){
+            return 6;
+        }
+
+        if(strcmp(instrucao,"$imprimir") == 0){
+            return 7;
+        }
+
+        if(strcmp(instrucao,"$fim") == 0){
+            return 8;
+        }
+           return -1;
     }
     return -1;
+    
+}
+
+void copiarString(char dest[], char orig[]){
+    
+    int i=0;
+    for(;orig[i] != '\0';i++)
+    {
+        dest[i] = orig[i];
+    }
+    dest[i]='\0';
 }
 
 void criarLista(TDLEnc *lista){
 
     lista->primeiro = NULL;
+    lista->ultimo = NULL;
     lista->numElem = 0;
+    printf("Lista criada com sucesso\n");
 }
 
 Boolean vaziaLista(TDLEnc *lista){
 
-    return (lista->primeiro == NULL && lista->numElem == 0);
+    return (lista->primeiro == NULL &&  lista->ultimo == NULL && lista->numElem == 0);
+}
+
+
+Boolean listaUnitaria(TDLEnc *lista){
+
+    return (lista->primeiro != NULL && lista->ultimo != NULL && lista->numElem == 1);
 }
 
 void imprimirLista(TDLEnc *lista){
 
-    printf("Entrei em imprimir");
-    for(TAtomo *paux = lista->primeiro; paux->seguinte != lista->primeiro; paux = paux->seguinte){
-        printf("%s\n", paux->info.frase);
+    for(TAtomo *paux = lista->primeiro; paux != lista->ultimo; paux = paux->seguinte)
+    {
+        printf("%d %s\n",paux->info.numLinha, paux->info.frase);
     }
-    printf("\n");
 }
 
-Boolean listaUnitaria(TDLEnc *lista){
+int inserirElemento(TDLEnc *lista, char st[]){
 
-    return (lista->primeiro != NULL && lista->numElem == 1);
-}
-
-int inserirElemento(TDLEnc *lista, char st[], TAtomo *pnovo){
+    TAtomo *pnovo = (TAtomo*) malloc(sizeof(TAtomo));
+    if(pnovo == NULL)   return NO_SPACE;
 
     strcpy(pnovo->info.frase, st);
-    printf("String em inserir: %s",pnovo->info.frase);
-    lista->numElem++;
-    pnovo->info.numLinha = lista->numElem;
-    if(vaziaLista(lista)){
-        pnovo->seguinte = pnovo->anterior = NULL;
-        lista->primeiro = pnovo;
-    }
-    if(listaUnitaria(lista)){
-        pnovo->seguinte=pnovo->anterior = lista->primeiro;
-        lista->primeiro->seguinte = lista->primeiro->anterior = pnovo;  
+    pnovo->info.numLinha = lista->numElem+1;
+    pnovo->seguinte = NULL;
+    if(vaziaLista(lista))
+    {
+        pnovo->anterior = NULL;
+        lista->primeiro= lista->ultimo= pnovo;  
     }
     else{
-        pnovo->anterior = lista->primeiro->anterior;
-        pnovo->seguinte = lista->primeiro;
-        lista->primeiro->anterior = pnovo;
+        pnovo->anterior = lista->ultimo;
+        lista->ultimo->seguinte = pnovo;
+        lista->ultimo = pnovo;
     }
+    lista->numElem +=1;
     return OK;
 }
 
-int pegarInstrucao(char st[], char instrucao[])
-{
-    if(st[0]!= '$')return ERROR;
-
-    for(int i=0; st[i]!= '\0'; i++){
 
 
+int ehCaracterValido(char st[]){
+
+    for(int i=0; st[i] != '\0';i++)
+    {
+        if(!isalpha(st[i])) 
+        {
+            if(st[i] != ' ')
+             {
+                 if(st[i]!= '-')
+                     return ERROR;
+             }   
+        }
+       
     }
+    return OK;
+
 }
 
 int main (){
@@ -134,7 +140,7 @@ int main (){
     char string[80];
     criarLista(&lista);
     int flagInsercao = 0;
-    
+    //char st[80];
     while(num != 0){
 
         printf("Entre com a instrucao\n");
@@ -153,7 +159,35 @@ int main (){
         if(num == 1){
             flagInsercao = 1;
         }
-        if(num == 2){
+        if(flagInsercao == 1){
+
+            while (num == 1)
+            {
+                string[0]='\0';
+                scanf("%[^\n]", string);
+                __fpurge(stdin);
+
+                if(ehCaracterValido(string) == OK ){
+                    inserirElemento(&lista,string);
+                    string[0]='\0';
+                }
+                else if(numInstrucao(string) != -1)
+                {
+                    printf("Saindo do modo de insercao\n");
+                    flagInsercao = 0;
+                    imprimirLista(&lista);
+                    break;
+                }
+                else{
+                    printf("O texto contem caracteres invalidos/n");
+                }
+
+            }
+            
+        }
+
+
+        /*if(num == 2){
             flagInsercao = 0;
         }
 
@@ -173,7 +207,7 @@ int main (){
                  printf("Entrei\n");   
             }
         
-        }
+        }*/
     }
     //imprimirLista(&lista);
     printf("Sai\n");
