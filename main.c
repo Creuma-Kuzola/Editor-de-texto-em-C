@@ -180,6 +180,23 @@ void linha(TDLEnc *lista,int n ){
 
 }
 
+void pegarInstrucaoComMaisParametros(char st[]){
+    
+    char inst[80];
+    int n,m;
+
+    for(int i=0; st[i] =! '\0'; i++)
+    {
+        if(st[0]!='$') break;
+        if(st[i] == ' ' & st[i-1] != ' ') 
+         {} 
+
+    }
+
+}
+
+//void copiarStringDado
+
 int main (){
 
     char instrucao[10];
@@ -190,11 +207,13 @@ int main (){
     criarLista(&lista);
     int flagInsercao = 0;
     //char st[80];
-    while(num != 0){
+    while(num != 8){
 
         printf("Entre com a instrucao\n");
         scanf("%[^\n]", string);
          __fpurge(stdin);
+        int n = strlen(string);
+        printf("amanho:%d \n",n);
 
         num: num = numInstrucao(string);
         printf("Num: %d\n",num);
@@ -202,7 +221,7 @@ int main (){
         if(num == -1){
             printf("Instrucao invalida\n");
         }
-        if(num == 0){
+        if(num == 8){
             break;
         } 
         if(num == 1){
