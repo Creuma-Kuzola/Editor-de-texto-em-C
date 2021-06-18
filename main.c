@@ -82,15 +82,24 @@ Boolean listaUnitaria(TDLEnc *lista){
 
 void imprimirLista(TDLEnc *lista){
 
-    for(TAtomo *paux = lista->primeiro; paux != NULL; paux = paux->seguinte)
+    if(lista->primeiro != NULL && lista->ultimo != NULL)
     {
-        printf("%d %s\n",paux->info.numLinha, paux->info.frase);
+        printf("--------------------------------------------------------------\n");
+        for(TAtomo *paux = lista->primeiro; paux != NULL; paux = paux->seguinte)
+        {
+            printf("%d %s\n",paux->info.numLinha, paux->info.frase);
+        }
+        printf("--------------------------------------------------------------\n\n");
     }
+    else{
+        printf("Erro: Impossivel imprimir, a lista esta vazia");
+    }
+    
 }
 
 void imprimirLinhaMAteN(TDLEnc *lista, int m, int n){
 
-    if(lista != NULL){
+    if(lista->primeiro != NULL && lista->ultimo != NULL){
 
         if(m >= 1 && n <= lista->ultimo->info.numLinha){
            
@@ -118,11 +127,11 @@ void imprimirLinhaMAteN(TDLEnc *lista, int m, int n){
 
 void imprimirUltimo(TDLEnc *lista){
 
-    if(lista != NULL){
+    if(lista->primeiro != NULL && lista->ultimo != NULL){
         printf("%d %s\n", lista->ultimo->info.numLinha, lista->ultimo->info.frase);
     }
     else{
-        printf("Erro: Lista Vazia");
+        printf("Erro: Lista Vazia\n");
     }
     
 }
@@ -176,22 +185,13 @@ void linha(TDLEnc *lista,int n ){
     {
         if(paux->info.numLinha == n)
         {
+            printf("n:%d foi marcado como corrente",n);
             paux->info.linhaCorrente = TRUE;
             break;
         } 
     }
 
 }
-
-/*void copiarStringDadoIndice(int indiceInicio, int indiceFim, char destino[],char origem[])
-{
-    int k=0;
-    while(indiceInicio<=indiceFim){
-        destino[k++] = origem[indiceInicio++];
-    }
-    destino[k] = '\0';
-}*/
-
 
 void copiarStringDadoIndice(int indiceInicio, int indiceFim, char destino[],char origem[])
 {
@@ -252,39 +252,41 @@ void pegarM(int indiceInicio, int indiceFim, char destino[],char origem[], int *
     *m = atoi(destino);
 }
 
-void separarOsDadosDaInstrucaoComVariosParametros(char st[]){
+void pegarNM(char st[], int indiceInicio, int *n, int *m){
+    
     char inst [15], numNInicio[10], numMFim[10]; 
-    int indiceInicio = 0,n,m;
     int i;
-    for(i=0;st[i] != '\0';i++){
+    
+    for(i = indiceInicio;st[i] != '\0';i++){
 
-        if(st[i] == ' ' && isalpha(st[i-1]))
-        {
-            copiarStringDadoIndice(indiceInicio,i-1,inst,st);
-            indiceInicio = i;
-        }
-        else if(st[i] == ','){
-            pegarN(indiceInicio,i,numNInicio,st,&n);
+        if(st[i] == ','){
+            pegarN(indiceInicio,i,numNInicio,st,n);
             indiceInicio=i;
         }
     }
-    printf("ind:%d\n", indiceInicio);
-    printf("i:%d\n",i);
-    pegarM(indiceInicio+1,i,numMFim,st,&m);
-    printf("Inst:%s\n",inst);
-    printf("n: %d & m:%d\n", n,m);
-    
+    pegarM(indiceInicio+1,i,numMFim,st,m);
 }
 
-int pegarInstrucao(char st[], char inst []){
+void pegarMLinha(char st[], int indiceInicio,int *m){
+    
+    char inst [15], numNInicio[10], numMFim[10]; 
+    int i;
+
+    for(i = indiceInicio;st[i] != '\0';i++);
+    pegarM(indiceInicio+1,i,numMFim,st,m);
+}
+
+int pegarInstrucao(char st[], char inst [], int *pos){
     
     int indiceInicio = 0;
     int i;
+
     for(i=0;st[i] != '\0';i++){
 
         if(st[i] == ' ' && isalpha(st[i-1]))
         {
            copiarStringDadoIndice(indiceInicio,i-1,inst,st);
+           *pos = i;
            return OK;
         }
     }
@@ -294,8 +296,65 @@ int pegarInstrucao(char st[], char inst []){
       return OK;
     }
 
-    return NOT_FOUND;
-         
+    return NOT_FOUND;   
+}
+
+TAtomo *buscarAtomoDadaChave(TDLEnc *lista, int chave){
+
+    for(TAtomo *paux=lista->primeiro; paux !=NULL; paux= paux->seguinte)
+    {
+       if(paux->info.numLinha == chave)
+       {
+           return paux;
+       }
+    }
+    return NULL;
+}
+
+int removerMN(TDLEnc *lista, int n, int m)
+{
+    TAtomo *pdel;
+    if(lista->primeiro != NULL && lista->ultimo != NULL)
+    {
+        if( n >= 1 && m > n )
+        {
+            for(int i=n; i<=m;i++)
+            {
+                pdel = buscarAtomoDadaChave(lista,i);
+
+                if(pdel != NULL)
+                {
+                    if(pdel == lista->primeiro)
+                    {
+                        lista->primeiro = pdel->seguinte;
+                    }
+                    else if(pdel == lista->ultimo)
+                    {
+                        pdel->anterior->seguinte = NULL;
+                        lista->ultimo = pdel->anterior;
+                    }
+                    else
+                    {
+                        pdel->anterior->seguinte = pdel->seguinte;
+                        pdel->seguinte->anterior = pdel->anterior;
+                    }
+
+                    if(pdel->info.linhaCorrente == TRUE && pdel != lista->primeiro)
+                    {
+                        pdel->anterior->info.linhaCorrente= TRUE;
+                    }
+                    free(pdel);
+                }
+            }
+        }
+        else{
+            printf("Verifique os parametros\n");
+        }       
+    }
+    else{
+        printf("Erro:Impossivel remover, a lista esta Vazia\n");
+    }
+    
 }
 
 int main (){
@@ -306,7 +365,7 @@ int main (){
     char string[80];
     char inst[15];
     criarLista(&lista);
-    int flagInsercao = 0;
+    int flagInsercao = 0, indiceInicio=-1, indiceFim,n,m;
     
     while(num != 8){
 
@@ -314,28 +373,32 @@ int main (){
         scanf("%[^\n]", string);
          __fpurge(stdin);
 
-        pegarInstrucao(string,inst);
-        printf("inst: %s", inst);
+        pegarInstrucao(string,inst,&indiceInicio);
        
         num: num = numInstrucao(inst); 
-        printf("Num: %d\n",num);
-
+        
         if(num == -1){
             printf("Instrucao invalida\n");
+        }
+        if(num == 1){
+            flagInsercao = 1;
+        }
+        if(num == 2){
+            pegarNM(string,indiceInicio,&n,&m);
+            removerMN(&lista,n,m);
+            imprimirLista(&lista);
+        }
+        if(num == 3){
+            pegarMLinha(string,indiceInicio,&m);
+            linha(&lista,m);
+        }  
+        if(num == 6){
+            imprimirUltimo(&lista);
         }
         if(num == 8){
             break;
         } 
-        if(num == 1){
-            flagInsercao = 1;
-        }
-        if(num == 3){
-            
-        }
-        if(num == 6){
-            imprimirUltimo(&lista);
-        }
-
+      
         if(flagInsercao == 1){
 
             while (num == 1)
@@ -350,7 +413,7 @@ int main (){
                 }
                 else 
                 {
-                    pegarInstrucao(string,inst);
+                    pegarInstrucao(string,inst,&indiceInicio);
                     if(numInstrucao(inst) != -1){
                         flagInsercao = 0;
                         imprimirLista(&lista);

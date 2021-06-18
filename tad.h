@@ -27,9 +27,9 @@ typedef struct TAtomo
 
 typedef struct TDLEnc{
 
-    TAtomo *primeiro;
-    TAtomo *ultimo;
-    int numElem;
+  struct  TAtomo *primeiro;
+  struct  TAtomo *ultimo;
+  int numElem;
 
 }TDLEnc;
 
