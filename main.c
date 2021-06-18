@@ -101,15 +101,24 @@ void imprimirLinhaMAteN(TDLEnc *lista, int m, int n){
 
     if(lista->primeiro != NULL && lista->ultimo != NULL){
 
-        if(m >= 1 && n <= lista->ultimo->info.numLinha){
-           
-            for(TAtomo *paux = lista->primeiro; paux != NULL; paux = paux->seguinte)
-            {
-                if( paux->info.numLinha >= m && paux->info.numLinha <= n){
-                    printf("%d %s\n",paux->info.numLinha, paux->info.frase);
+        if(m >= 1 && n <= lista->ultimo->info.numLinha)
+        {
+            if(m<n){
+
+                printf("--------------------------------------------------------------\n");
+                for(TAtomo *paux = lista->primeiro; paux != NULL; paux = paux->seguinte)
+                {
+                    if( paux->info.numLinha >= m && paux->info.numLinha <= n){
+                        printf("%d %s\n",paux->info.numLinha, paux->info.frase);
+                    }
+                    
                 }
-                
+                printf("--------------------------------------------------------------\n\n");
             }
+            else{
+                printf("O m é maior do que o n\n");
+            }
+            
         }
         else if(m < 1){
             printf("Erro: o M é menor do que 1\n");
@@ -120,7 +129,7 @@ void imprimirLinhaMAteN(TDLEnc *lista, int m, int n){
         
     }
     else{
-        printf("Erro: Lista Vazia");
+        printf("Erro:Impossivel imprimir, a lista esta vazia\n");
     }
     
 }
@@ -394,6 +403,10 @@ int main (){
         }  
         if(num == 6){
             imprimirUltimo(&lista);
+        }
+        if(num == 7){
+            pegarNM(string,indiceInicio,&n,&m);
+            imprimirLinhaMAteN(&lista, n,m);
         }
         if(num == 8){
             break;
