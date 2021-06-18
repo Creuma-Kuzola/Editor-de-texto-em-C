@@ -40,7 +40,7 @@ Boolean vaziaLista(TDLEnc *lista);
 void imprimirLista(TDLEnc *lista);
 Boolean listaUnitaria(TDLEnc *lista);
 int inserirElemento(TDLEnc *lista, char st[]);
-int pegarInstrucao(char st[], char instrucao[]);
+//int pegarInstrucao(char st[], char instrucao[]);
 
 
 #endif // RACIONAL_H_INCLUDED

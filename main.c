@@ -158,7 +158,10 @@ int ehCaracterValido(char st[]){
             if(st[i] != ' ')
              {
                  if(st[i]!= '-')
-                     return ERROR;
+                 {
+                    printf("O texto contem caracteres invalidos\n");
+                    return ERROR;
+                 }
              }   
         }
        
@@ -250,7 +253,7 @@ void pegarM(int indiceInicio, int indiceFim, char destino[],char origem[], int *
 }
 
 void separarOsDadosDaInstrucaoComVariosParametros(char st[]){
-    char inst [15], numNInicio[30], numMFim[30]; 
+    char inst [15], numNInicio[10], numMFim[10]; 
     int indiceInicio = 0,n,m;
     int i;
     for(i=0;st[i] != '\0';i++){
@@ -273,25 +276,48 @@ void separarOsDadosDaInstrucaoComVariosParametros(char st[]){
     
 }
 
+int pegarInstrucao(char st[], char inst []){
+    
+    int indiceInicio = 0;
+    int i;
+    for(i=0;st[i] != '\0';i++){
+
+        if(st[i] == ' ' && isalpha(st[i-1]))
+        {
+           copiarStringDadoIndice(indiceInicio,i-1,inst,st);
+           return OK;
+        }
+    }
+
+    if(isalpha(st[i-1])){
+      copiarStringDadoIndice(indiceInicio,i-1,inst,st);
+      return OK;
+    }
+
+    return NOT_FOUND;
+         
+}
 
 int main (){
 
-    char instrucao[10];
     TInfo info;
     int num = -2;
     TDLEnc lista;
     char string[80];
+    char inst[15];
     criarLista(&lista);
     int flagInsercao = 0;
-    //char st[80];
+    
     while(num != 8){
 
         printf("Entre com a instrucao\n");
         scanf("%[^\n]", string);
          __fpurge(stdin);
-        
-        separarOsDadosDaInstrucaoComVariosParametros(string);
-        num: num = numInstrucao(string);
+
+        pegarInstrucao(string,inst);
+        printf("inst: %s", inst);
+       
+        num: num = numInstrucao(inst); 
         printf("Num: %d\n",num);
 
         if(num == -1){
@@ -322,23 +348,22 @@ int main (){
                     inserirElemento(&lista,string);
                     string[0]='\0';
                 }
-                else if(numInstrucao(string) != -1)
+                else 
                 {
-                    printf("Saindo do modo de insercao\n");
-                    flagInsercao = 0;
-                    imprimirLista(&lista);
-                    goto num;
-                    break;
+                    pegarInstrucao(string,inst);
+                    if(numInstrucao(inst) != -1){
+                        flagInsercao = 0;
+                        imprimirLista(&lista);
+                        goto num;
+                        break;
+                    }
                 }
-                else{
-                    printf("O texto contem caracteres invalidos/n");
-                }
+                    
 
             }
             
         }
-        string[0]='\0';
-   
+    
     }
 
     return 0;
