@@ -180,22 +180,99 @@ void linha(TDLEnc *lista,int n ){
 
 }
 
-void pegarInstrucaoComMaisParametros(char st[]){
-    
-    char inst[80];
-    int n,m;
-
-    for(int i=0; st[i] =! '\0'; i++)
-    {
-        if(st[0]!='$') break;
-        if(st[i] == ' ' & st[i-1] != ' ') 
-         {} 
-
+/*void copiarStringDadoIndice(int indiceInicio, int indiceFim, char destino[],char origem[])
+{
+    int k=0;
+    while(indiceInicio<=indiceFim){
+        destino[k++] = origem[indiceInicio++];
     }
+    destino[k] = '\0';
+}*/
 
+
+void copiarStringDadoIndice(int indiceInicio, int indiceFim, char destino[],char origem[])
+{
+    int k=0;
+    while(indiceInicio<=indiceFim){
+        
+        if(origem[0] == '$'){
+            destino[k] = origem[indiceInicio];
+        }
+        else{
+            break;
+        }
+
+        if(k>0){
+            if(isalpha(origem[k]))
+            {
+                destino[k] = origem[indiceInicio];
+            }
+            else{
+                printf("Erro: a instrucao contem caracteres que nao sao letras\n");
+                break;
+            }
+        }
+        k++;
+        indiceInicio++;
+        
+    }
+    destino[k] = '\0';
 }
 
-//void copiarStringDado
+void pegarN(int indiceInicio, int indiceFim, char destino[],char origem[], int *n)
+{
+    int k=0;
+    for(int i=indiceInicio; i<=indiceFim+1;i++)
+    {
+        if(isdigit(origem[i])){
+            destino[k] = origem[indiceInicio];
+            k++;
+            indiceInicio++;
+        }
+    }
+    destino[k] = '\0';
+    *n = atoi(destino);
+}
+
+void pegarM(int indiceInicio, int indiceFim, char destino[],char origem[], int *m)
+{
+    int k=0;
+    for(int i=indiceInicio; i<=indiceFim-1;i++)
+    {
+        if(isdigit(origem[i])){
+            destino[k] = origem[indiceInicio];
+            k++;
+            indiceInicio++;
+        }
+    }
+    destino[k] = '\0';
+    *m = atoi(destino);
+}
+
+void separarOsDadosDaInstrucaoComVariosParametros(char st[]){
+    char inst [15], numNInicio[30], numMFim[30]; 
+    int indiceInicio = 0,n,m;
+    int i;
+    for(i=0;st[i] != '\0';i++){
+
+        if(st[i] == ' ' && isalpha(st[i-1]))
+        {
+            copiarStringDadoIndice(indiceInicio,i-1,inst,st);
+            indiceInicio = i;
+        }
+        else if(st[i] == ','){
+            pegarN(indiceInicio,i,numNInicio,st,&n);
+            indiceInicio=i;
+        }
+    }
+    printf("ind:%d\n", indiceInicio);
+    printf("i:%d\n",i);
+    pegarM(indiceInicio+1,i,numMFim,st,&m);
+    printf("Inst:%s\n",inst);
+    printf("n: %d & m:%d\n", n,m);
+    
+}
+
 
 int main (){
 
@@ -212,9 +289,8 @@ int main (){
         printf("Entre com a instrucao\n");
         scanf("%[^\n]", string);
          __fpurge(stdin);
-        int n = strlen(string);
-        printf("amanho:%d \n",n);
-
+        
+        separarOsDadosDaInstrucaoComVariosParametros(string);
         num: num = numInstrucao(string);
         printf("Num: %d\n",num);
 
@@ -261,7 +337,7 @@ int main (){
             }
             
         }
-
+        string[0]='\0';
    
     }
 
