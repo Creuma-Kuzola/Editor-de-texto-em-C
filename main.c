@@ -145,6 +145,19 @@ void imprimirUltimo(TDLEnc *lista){
     
 }
 
+TAtomo *buscarAtomoCorrente(TDLEnc *lista){
+
+    for(TAtomo *paux=lista->primeiro; paux !=NULL; paux= paux->seguinte)
+    {
+       if(paux->info.linhaCorrente == TRUE)
+       {
+           return paux;
+       }
+    }
+    return NULL;
+}
+
+
 int inserirElemento(TDLEnc *lista, char st[]){
 
     TAtomo *pnovo = (TAtomo*) malloc(sizeof(TAtomo));
@@ -159,9 +172,27 @@ int inserirElemento(TDLEnc *lista, char st[]){
         lista->primeiro= lista->ultimo= pnovo;  
     }
     else{
-        pnovo->anterior = lista->ultimo;
-        lista->ultimo->seguinte = pnovo;
-        lista->ultimo = pnovo;
+
+        TAtomo *pcorrente = buscarAtomoCorrente(lista);
+        if(pcorrente != NULL){
+
+            if( pcorrente == lista->ultimo){
+                lista->ultimo->seguinte = pnovo;
+                lista->ultimo = pnovo;
+            }
+            else
+            {   pnovo->seguinte = lista->primeiro->seguinte;
+                lista->primeiro->seguinte->anterior= pnovo;
+                lista->primeiro->seguinte = pnovo;
+            }
+
+        }
+        else{
+             pnovo->anterior = lista->ultimo;
+             lista->ultimo->seguinte = pnovo;
+            lista->ultimo = pnovo;
+        }
+       
     }
     lista->numElem +=1;
     return OK;
