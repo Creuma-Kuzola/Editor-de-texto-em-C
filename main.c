@@ -137,7 +137,7 @@ void imprimirLinhaMAteN(TDLEnc *lista, int m, int n){
 void imprimirUltimo(TDLEnc *lista){
 
     if(lista->primeiro != NULL && lista->ultimo != NULL){
-        printf("%d %s\n", lista->ultimo->info.numLinha, lista->ultimo->info.frase);
+        printf("%d\n", lista->ultimo->info.numLinha);
     }
     else{
         printf("Erro: Lista Vazia\n");
