@@ -426,26 +426,73 @@ void pegarSubstring(char string[], int pos, char subString[])
     
 }
 
-void localizarString(TDLEnc *lista, char subs[]){
+int localizarString(TDLEnc *lista, char subs[]){
 
-    int tamanhoSubs = strlen(subs);
-
-    for(TAtomo *paux = lista->primeiro; paux != NULL; paux= paux->seguinte)
+    if(lista->primeiro != NULL && lista->ultimo != NULL)
     {
-        for(int i=0; paux->info.frase[i] != '\0'; i++)
+        int tamanhoSubs = strlen(subs);
+        TAtomo *paux;
+        int i, k = 0, tamStringLocalizada = 0 , flagStringLocalizada = 0;
+        for(paux = lista->primeiro; paux != NULL; paux= paux->seguinte)
         {
-            if(tamanhoSubs > 1)
-            {   int k = 0;
-                for(int j = 0; j<=tamanhoSubs-1; j++)
-                {
-                    if(paux->info.frase[i+k] != subs[j])
+            for(i=0; paux->info.frase[i] != '\0'; i++)
+            {
+                k=0;
+                tamStringLocalizada = 0;
+                flagStringLocalizada = 0;
+                if(tamanhoSubs > 1)
+                {  printf("Tam:%d \n", tamanhoSubs);
+                    for(int j = 0; j<=tamanhoSubs-1; j++)
                     {
+                        printf("i:%d k:%d  paux:%c  subs:%c\n",i,k,paux->info.frase[i+k], subs[k]);
+                        
+                        if(paux->info.frase[i+k] == subs[j])
+                        {
+                            tamStringLocalizada++;
+                            
+                        }
+                        k++;
+                    }
+                    if(tamanhoSubs == tamStringLocalizada) 
+                    {
+                        printf("Encontrei\n");
+                        tamStringLocalizada = 1;
+                    }
+                }
+                else{
+
+                    if(paux->info.frase[i] == subs[k]){
                         break;
                     }
                 }
+
+                if(flagStringLocalizada == 1)
+                {
+                    break;
+                }
+
+                
             }
+
+            if(paux->info.frase[i] == '\0')
+            {
+                printf("Nao Encontrei\n");
+                
+            }
+            else{
+                printf("%d %s\n", paux->info.numLinha, paux->info.frase);
+            }
+
         }
+
+        
+
+
     }
+    else{
+        printf("Erro: Impossível localizar '%s' , a lista está vazia\n", subs);
+    }
+    
 }
 
 int main (){
@@ -491,6 +538,7 @@ int main (){
             pegarSubstring(string,indiceInicio,subString);
             printf("%d\n", indiceInicio);
             printf("SubString: %s\n", subString);
+            localizarString(&lista, subString);
         } 
         if(num == 6){
             imprimirUltimo(&lista);
