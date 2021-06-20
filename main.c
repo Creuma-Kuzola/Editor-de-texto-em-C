@@ -221,6 +221,11 @@ int ehCaracterValido(char st[]){
 
 void linha(TDLEnc *lista,int n ){
 
+    if(n == 0)
+    {
+
+    }
+
     for(TAtomo *paux= lista->primeiro; paux != NULL; paux = paux->seguinte)
     {
         if(paux->info.numLinha == n)
@@ -329,6 +334,7 @@ int pegarInstrucao(char st[], char inst [], int *pos){
            *pos = i;
            return OK;
         }
+    
     }
 
     if(isalpha(st[i-1])){
@@ -397,6 +403,51 @@ int removerMN(TDLEnc *lista, int n, int m)
     
 }
 
+void pegarSubstring(char string[], int pos, char subString[])
+{
+    int i,j, k=0;
+    for(i=pos; string[i] != '\0';i++)
+    {
+        if(isalpha(string[i]) && string[i-1] == '%')
+        break;
+    }
+
+    if(string[i] != '\0')
+    {
+        for(j=i; string[j] != '\0'; j++)
+        {
+            subString[k++] = string[j];
+        }
+        subString[j] = '\0';
+    }
+    else{
+        printf("Erro: Sintaxe do comando $localizar invalida \n");
+    }
+    
+}
+
+void localizarString(TDLEnc *lista, char subs[]){
+
+    int tamanhoSubs = strlen(subs);
+
+    for(TAtomo *paux = lista->primeiro; paux != NULL; paux= paux->seguinte)
+    {
+        for(int i=0; paux->info.frase[i] != '\0'; i++)
+        {
+            if(tamanhoSubs > 1)
+            {   int k = 0;
+                for(int j = 0; j<=tamanhoSubs-1; j++)
+                {
+                    if(paux->info.frase[i+k] != subs[j])
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+    }
+}
+
 int main (){
 
     TInfo info;
@@ -404,6 +455,8 @@ int main (){
     TDLEnc lista;
     char string[80];
     char inst[15];
+    char subString[20];
+
     criarLista(&lista);
     int flagInsercao = 0, indiceInicio=-1, indiceFim,n,m;
     
@@ -431,7 +484,14 @@ int main (){
         if(num == 3){
             pegarMLinha(string,indiceInicio,&m);
             linha(&lista,m);
-        }  
+        } 
+        if(num == 4)
+        {
+            printf("Entrei em localizar\n");
+            pegarSubstring(string,indiceInicio,subString);
+            printf("%d\n", indiceInicio);
+            printf("SubString: %s\n", subString);
+        } 
         if(num == 6){
             imprimirUltimo(&lista);
         }
