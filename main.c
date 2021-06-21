@@ -432,68 +432,73 @@ int localizarString(TDLEnc *lista, char subs[]){
     {
         int tamanhoSubs = strlen(subs);
         TAtomo *paux;
-        int i, k = 0, tamStringLocalizada = 0 , flagStringLocalizada = 0;
+        int i, k = 0, tamStringLocalizada = 0 , flagImpressao = 0, vezesAImprimir = 0;
         for(paux = lista->primeiro; paux != NULL; paux= paux->seguinte)
         {
+            printf("%d ", paux->info.numLinha);
+            
             for(i=0; paux->info.frase[i] != '\0'; i++)
             {
                 k=0;
                 tamStringLocalizada = 0;
-                flagStringLocalizada = 0;
+            
                 if(tamanhoSubs > 1)
-                {  printf("Tam:%d \n", tamanhoSubs);
+                { 
                     for(int j = 0; j<=tamanhoSubs-1; j++)
                     {
-                        printf("i:%d k:%d  paux:%c  subs:%c\n",i,k,paux->info.frase[i+k], subs[k]);
-                        
                         if(paux->info.frase[i+k] == subs[j])
                         {
                             tamStringLocalizada++;
-                            
                         }
                         k++;
                     }
+
                     if(tamanhoSubs == tamStringLocalizada) 
                     {
-                        printf("Encontrei\n");
-                        tamStringLocalizada = 1;
+                        flagImpressao = 1;
+                        vezesAImprimir = tamStringLocalizada;
                     }
+
                 }
                 else{
 
                     if(paux->info.frase[i] == subs[k]){
-                        break;
+                        printf("\033[32;1m%c\033[0m",paux->info.frase[i]);
+                    }
+                    else{
+                        printf("%c",paux->info.frase[i]);
                     }
                 }
 
-                if(flagStringLocalizada == 1)
+                if(flagImpressao == 1)
                 {
-                    break;
+                    if(vezesAImprimir != 0)
+                    {
+                        printf("\033[32;1m%c\033[0m",paux->info.frase[i]);
+                        vezesAImprimir--;
+                    }
+                    else{
+                        printf("%c",paux->info.frase[i]);
+                        flagImpressao = 0;
+                        vezesAImprimir = 0;
+                    }
                 }
-
+                else{
+                    printf("%c",paux->info.frase[i]);
+                }
                 
             }
-
-            if(paux->info.frase[i] == '\0')
-            {
-                printf("Nao Encontrei\n");
-                
-            }
-            else{
-                printf("%d %s\n", paux->info.numLinha, paux->info.frase);
-            }
+            printf("\n");
 
         }
-
-        
-
 
     }
     else{
         printf("Erro: Impossível localizar '%s' , a lista está vazia\n", subs);
     }
-    
 }
+
+
 
 int main (){
 
@@ -534,10 +539,7 @@ int main (){
         } 
         if(num == 4)
         {
-            printf("Entrei em localizar\n");
             pegarSubstring(string,indiceInicio,subString);
-            printf("%d\n", indiceInicio);
-            printf("SubString: %s\n", subString);
             localizarString(&lista, subString);
         } 
         if(num == 6){
