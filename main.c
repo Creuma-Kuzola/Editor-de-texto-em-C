@@ -430,44 +430,32 @@ int localizarString(TDLEnc *lista, char subs[]){
 
     if(lista->primeiro != NULL && lista->ultimo != NULL)
     {
+        printf("subs em localizar:%s\n", subs);
         int tamanhoSubs = strlen(subs);
         TAtomo *paux;
         int i, k = 0, tamStringLocalizada = 0 , flagImpressao = 0, vezesAImprimir = 0;
         for(paux = lista->primeiro; paux != NULL; paux= paux->seguinte)
         {
             printf("%d ", paux->info.numLinha);
-            
+
             for(i=0; paux->info.frase[i] != '\0'; i++)
             {
                 k=0;
                 tamStringLocalizada = 0;
             
-                if(tamanhoSubs > 1)
-                { 
-                    for(int j = 0; j<=tamanhoSubs-1; j++)
+                for(int j = 0; j<=tamanhoSubs-1; j++)
+                {
+                    if(paux->info.frase[i+k] == subs[j])
                     {
-                        if(paux->info.frase[i+k] == subs[j])
-                        {
-                            tamStringLocalizada++;
-                        }
-                        k++;
+                        tamStringLocalizada++;
                     }
-
-                    if(tamanhoSubs == tamStringLocalizada) 
-                    {
-                        flagImpressao = 1;
-                        vezesAImprimir = tamStringLocalizada;
-                    }
-
+                    k++;
                 }
-                else{
 
-                    if(paux->info.frase[i] == subs[k]){
-                        printf("\033[32;1m%c\033[0m",paux->info.frase[i]);
-                    }
-                    else{
-                        printf("%c",paux->info.frase[i]);
-                    }
+                if(tamanhoSubs == tamStringLocalizada) 
+                {
+                    flagImpressao = 1;
+                    vezesAImprimir = tamStringLocalizada;
                 }
 
                 if(flagImpressao == 1)
@@ -541,6 +529,8 @@ int main (){
         {
             pegarSubstring(string,indiceInicio,subString);
             localizarString(&lista, subString);
+            memset(subString,'\0',20);
+            subString[0]='\0';
         } 
         if(num == 6){
             imprimirUltimo(&lista);
@@ -557,13 +547,13 @@ int main (){
 
             while (num == 1)
             {
-                string[0]='\0';
+                memset(string,'\0',80);
                 scanf("%[^\n]", string);
                 __fpurge(stdin);
 
                 if(ehCaracterValido(string) == OK ){
                     inserirElemento(&lista,string);
-                    string[0]='\0';
+                    memset(string,'\0',80);
                 }
                 else 
                 {
