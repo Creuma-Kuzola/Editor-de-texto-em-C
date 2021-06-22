@@ -486,6 +486,30 @@ int localizarString(TDLEnc *lista, char subs[]){
     }
 }
 
+void pegarSubstringEmAlterar(char string[], int *pos, char subString1[])
+{
+    int i,j,d=0;
+
+    for(i = *pos; string[i] != '\0';i++)
+    {
+        if(isalpha(string[i]) && string[i-1] == '%')
+        break;
+    }
+
+    if(string[i] != '\0')
+    {
+        for(j=i; string[j] != ' '; j++)
+        {
+            subString1[d++] = string[j];
+        }
+        subString1[d] = '\0';
+    }
+    else{
+        printf("Erro: Sintaxe do comando $alterar invalida \n");
+    }
+
+    *pos = j;
+}
 
 
 int main (){
@@ -496,6 +520,7 @@ int main (){
     char string[80];
     char inst[15];
     char subString[20];
+    char subStringAlterar[20];
 
     criarLista(&lista);
     int flagInsercao = 0, indiceInicio=-1, indiceFim,n,m;
@@ -530,8 +555,13 @@ int main (){
             pegarSubstring(string,indiceInicio,subString);
             localizarString(&lista, subString);
             memset(subString,'\0',20);
-            subString[0]='\0';
         } 
+        if(num == 5){
+            printf("Entrei em alterar\n");
+            pegarSubstringEmAlterar(string,&indiceInicio,subString);
+            pegarSubstringEmAlterar(string,&indiceInicio,subStringAlterar);
+            printf("1:%s 2:%s\n\n",subString ,subStringAlterar);
+        }
         if(num == 6){
             imprimirUltimo(&lista);
         }
