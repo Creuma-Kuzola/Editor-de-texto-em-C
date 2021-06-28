@@ -511,6 +511,71 @@ void pegarSubstringEmAlterar(char string[], int *pos, char subString1[])
     *pos = j;
 }
 
+void pegarPosicaoString(TAtomo *paux, char subs[], int *posInicial, int *posFinal,int posInicioProcura){
+
+        int tamanhoSubs = strlen(subs);
+        int i, k = 0, tamStringLocalizada = 0 ;
+        for(i = posInicioProcura; paux->info.frase[i] != '\0'; i++)
+        {
+            k=0;
+            tamStringLocalizada = 0;
+            
+            for(int j = 0; j<=tamanhoSubs-1; j++)
+            {
+                if(paux->info.frase[i+k] != '\0')
+                { 
+                    if(paux->info.frase[i+k] == subs[j])
+                    {
+                        tamStringLocalizada++;
+                    }
+                }
+                 k++;
+                
+            }
+            if(tamanhoSubs == tamStringLocalizada) 
+            {
+                *posInicial = i;
+                *posFinal = k;
+                printf("i: %d  k:%d", i,k);
+                break;
+            }
+
+               
+                
+        }
+
+}
+
+
+void alterString(TDLEnc *lista,char stringAProcurar[], char StringSubstituta[]){
+
+    int tamStringAProcurar = strlen(stringAProcurar);
+    int tamStringSubstituta = strlen(StringSubstituta);
+ 
+    int indiceInicioAlterar = -1, indiceFimAlterar=-1, inicioProcuraAlterar = 0, tamVet,k, vezes = 1, i;
+    if(tamStringSubstituta == 0)
+    {
+        for(TAtomo *paux = lista->primeiro; paux != NULL; paux = paux->seguinte)
+        {  
+            tamVet = strlen(paux->info.frase);
+            pegarPosicaoString(paux,stringAProcurar,&indiceInicioAlterar,&indiceFimAlterar,inicioProcuraAlterar);
+            if(inicioProcuraAlterar != -1 && indiceFimAlterar != -1)
+            {
+                k = indiceInicioAlterar;
+                printf("ini: %d fim:%d \n", indiceInicioAlterar, indiceFimAlterar);
+               for(i = indiceFimAlterar+indiceInicioAlterar; paux->info.frase[i] != '\0'; i++)
+               {
+                   paux->info.frase[k++] = paux->info.frase[i];
+               }
+                
+                for(int j=k; j<= i; j++)
+                {
+                    paux->info.frase[j] = '\0';
+                }
+            }
+        }
+    }
+}
 
 int main (){
 
@@ -558,9 +623,11 @@ int main (){
         } 
         if(num == 5){
             printf("Entrei em alterar\n");
+            memset(subStringAlterar,'\0',20);
+            memset(subString,'\0',20);
             pegarSubstringEmAlterar(string,&indiceInicio,subString);
             pegarSubstringEmAlterar(string,&indiceInicio,subStringAlterar);
-            printf("1:%s 2:%s\n\n",subString ,subStringAlterar);
+            alterString(&lista,subString, subStringAlterar);
         }
         if(num == 6){
             imprimirUltimo(&lista);
