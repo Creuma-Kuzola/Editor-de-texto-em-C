@@ -547,7 +547,6 @@ TAtomo *pegarAtomo(TDLEnc *lista){
     return NULL;
 }
 
-
 void pegarPosicaoString(TAtomo *paux, char subs[], int *posInicial, int *posFinal){
 
         int tamanhoSubs = strlen(subs);
@@ -567,20 +566,76 @@ void pegarPosicaoString(TAtomo *paux, char subs[], int *posInicial, int *posFina
                     }
                 }
                  k++;
-                
             }
             if(tamanhoSubs == tamStringLocalizada) 
             {
                 *posInicial = i;
-                *posFinal = k-1;
+                *posFinal = k;
                 printf("i: %d  k:%d", i,k);
                 break;
             }
-
-               
-                
+    
         }
 
+}
+
+
+void alterarString(TDLEnc *lista, char subString1[], char subString2[])
+{
+    TAtomo *paux = buscarAtomoCorrente(lista);
+    if(paux == NULL)
+    {
+        printf("Impossiver alterar,nao existe uma linha corrente \n");
+    }
+    else
+    {
+        char texto[MAX];
+        int posInicial = 0, posFinal = 0, j=0, i=0, k=0, flagParagem=0, f=0;
+        int tamString = strlen(paux->info.frase), tamString2=0;
+        while(flagParagem==0)
+        {
+            pegarPosicaoString(paux,subString1, &posInicial, &posFinal);
+            if(posInicial != posFinal)
+            {
+                for(; i<posInicial;i++)
+                {
+                    texto[k++] = paux->info.frase[i];
+                }
+
+                for(; subString2[j] != '\0'; j++)
+                {
+                    texto[k++] = subString2[j];
+                }
+
+            }
+            else{
+
+                for(int c = posInicial; c < tamString;c++)
+                {
+                    texto[k++] = paux->info.frase[c];
+                }
+            }
+
+            if(posInicial == tamString)
+            {
+                flagParagem =1;
+            }
+            else{
+                i= posFinal;
+                j=0;
+                posInicial = posFinal;
+            }
+            
+        }
+
+        tamString2= strlen(texto);
+        
+        for(; f< tamString2; f++)
+        {
+            paux->info.frase[f] = texto[f];
+        } 
+        paux->info.frase[f] = '\0';
+    }    
 }
 
 
