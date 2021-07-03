@@ -549,7 +549,27 @@ TAtomo *pegarAtomo(TDLEnc *lista){
 
 void pegarPosicaoString(TAtomo *paux, char subs[], int *posInicial, int *posFinal){
 
-        int tamanhoSubs = strlen(subs);
+        int i = *posInicial;
+        int sizeSub = strlen(subs);
+        int sizeFrase = strlen(paux -> info.frase);
+        int flagFound = 1;
+
+        for (; i + sizeSub <= sizeFrase; i++ ) {
+            flagFound = 1;
+            for (int j = 0; j < sizeSub; j++) {
+                if (subs[j] != paux -> info.frase[j + i]) {
+                    flagFound = 0;
+                    break;
+                }
+            }
+            if (flagFound == 1) {
+                *posInicial = i;
+                *posFinal = i + sizeSub;
+                break;
+            }
+        }
+        printf("posInicial: %d  posFinal:%d", *posInicial, *posFinal);
+        /*int tamanhoSubs = strlen(subs);
         int i, k = 0, tamStringLocalizada = 0 ;
         for(i = 0; paux->info.frase[i] != '\0'; i++)
         {
@@ -572,10 +592,10 @@ void pegarPosicaoString(TAtomo *paux, char subs[], int *posInicial, int *posFina
                 *posInicial = i;
                 *posFinal = k;
                 printf("i: %d  k:%d", i,k);
-                break;
+                return;
             }
     
-        }
+        }*/
 
 }
 
@@ -595,6 +615,8 @@ void alterarString(TDLEnc *lista, char subString1[], char subString2[])
         while(flagParagem==0)
         {
             pegarPosicaoString(paux,subString1, &posInicial, &posFinal);
+            printf("\nInicio: %d, Fim: %d\n", posInicial, posFinal);
+
             if(posInicial != posFinal)
             {
                 for(; i<posInicial;i++)
@@ -602,11 +624,10 @@ void alterarString(TDLEnc *lista, char subString1[], char subString2[])
                     texto[k++] = paux->info.frase[i];
                 }
 
-                for(; subString2[j] != '\0'; j++)
+                for(j = 0; subString2[j] != '\0'; j++)
                 {
                     texto[k++] = subString2[j];
                 }
-
             }
             else{
 
@@ -614,6 +635,7 @@ void alterarString(TDLEnc *lista, char subString1[], char subString2[])
                 {
                     texto[k++] = paux->info.frase[c];
                 }
+                texto[k] = '\0';
             }
 
             if(posInicial == tamString)
@@ -622,7 +644,6 @@ void alterarString(TDLEnc *lista, char subString1[], char subString2[])
             }
             else{
                 i= posFinal;
-                j=0;
                 posInicial = posFinal;
             }
             
@@ -750,7 +771,7 @@ int main (){
             memset(subString,'\0',20);
             pegarStringsEmAlterar(string, subString, subStringAlterar);
             printf("%s \n%s \n", subString, subStringAlterar);
-            //alterarString(&lista,subString, subStringAlterar);
+            alterarString(&lista,subString, subStringAlterar);
         }
         if(num == 6){
             imprimirUltimo(&lista);
