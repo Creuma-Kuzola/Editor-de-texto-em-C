@@ -62,7 +62,7 @@ void imprimirLinhaMAteN(TDLEnc *lista, int m, int n);
 void imprimirUltimo(TDLEnc *lista);
 TAtomo *buscarAtomoCorrente(TDLEnc *lista);
 int ehCaracterValido(char st[]);
-void linha(TDLEnc *lista,int n);
+void linha(TDLEnc *lista,int n,int *flagLinha);
 void copiarStringDadoIndice(int indiceInicio, int indiceFim, char destino[],char origem[]);
 void pegarN(int indiceInicio, int indiceFim, char destino[],char origem[], int *n);
 void pegarM(int indiceInicio, int indiceFim, char destino[],char origem[], int *m);

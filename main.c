@@ -17,7 +17,7 @@ int main (){
 
     criarLista(&lista);
     int flagInsercao = 0, indiceInicio=-1, indiceFim,n,m;
-    int flagLinha = 0;
+    int flagLinha = 0, flagInsercaoInicio=0;
     
     while(num != 8){
 
@@ -33,16 +33,18 @@ int main (){
         }
         if(num == 1){
             flagInsercao = 1;
+            if(flagLinha == 1)
+            {
+
+            }
         }
         if(num == 2){
             pegarNM(string,indiceInicio,&n,&m);
             removerMN(&lista,n,m);
-            imprimirLista(&lista);
         }
         if(num == 3){
             pegarMLinha(string,indiceInicio,&m);
-            linha(&lista,m);
-            flagLinha = 1;
+            linha(&lista,m,&flagLinha);
         } 
         if(num == 4)
         {

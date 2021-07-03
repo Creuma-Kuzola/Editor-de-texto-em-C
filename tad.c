@@ -223,27 +223,40 @@ int ehCaracterValido(char st[]){
 
 }
 
-void linha(TDLEnc *lista,int n){
+void linha(TDLEnc *lista,int n, int *flagLinha){
 
-    TAtomo *pcorrente = buscarAtomoCorrente(lista);
     if(n == 0)
     {
+        *flagLinha = 1;
+    }
+    else if(n < 0)
+    {
+        printf("Erro: O numero da linha é menor do que 0\n");
+    }
+    else if( n > lista->numElem)
+    {
+        printf("Erro: O numero da linha é maior do que o número de elementos na string \n");
+    }
+    else
+    {
+        *flagLinha = 0;
+        TAtomo *pcorrente = buscarAtomoCorrente(lista);
+        if(pcorrente!= NULL)
+        {
+            pcorrente->info.linhaCorrente = FALSE;
+        }
 
+        for(TAtomo *paux= lista->primeiro; paux != NULL; paux = paux->seguinte)
+        {
+            if(paux->info.numLinha == n)
+            {
+                paux->info.linhaCorrente = TRUE;
+                break;
+            } 
+        }
     }
     
-    if(pcorrente!= NULL)
-    {
-        pcorrente->info.linhaCorrente = FALSE;
-    }
-
-    for(TAtomo *paux= lista->primeiro; paux != NULL; paux = paux->seguinte)
-    {
-        if(paux->info.numLinha == n)
-        {
-            paux->info.linhaCorrente = TRUE;
-            break;
-        } 
-    }
+    
 }
 
 void copiarStringDadoIndice(int indiceInicio, int indiceFim, char destino[],char origem[])
@@ -391,13 +404,20 @@ int removerMN(TDLEnc *lista, int n, int m)
                         pdel->anterior->seguinte = pdel->seguinte;
                         pdel->seguinte->anterior = pdel->anterior;
                     }
-
                     if(pdel->info.linhaCorrente == TRUE && pdel != lista->primeiro)
                     {
                         pdel->anterior->info.linhaCorrente= TRUE;
                     }
-                    free(pdel);
-                    lista->numElem--;
+                    
+                    if(lista->numElem == 1)
+                    {
+                        criarLista(lista);
+                        break;
+                    }
+                    else{
+                        free(pdel);
+                        lista->numElem--;
+                    }
                 }
             }
         }
@@ -405,7 +425,8 @@ int removerMN(TDLEnc *lista, int n, int m)
             printf("Verifique os parametros\n");
         }       
     }
-    else{
+    else
+    {
         printf("Erro:Impossivel remover, a lista esta Vazia\n");
     }
     
@@ -434,7 +455,6 @@ void pegarSubstring(char string[], int pos, char subString[])
     }
     
 }
-
 
 int localizarString(TDLEnc *lista, char subs[]){
 
