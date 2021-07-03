@@ -17,6 +17,7 @@ int main (){
 
     criarLista(&lista);
     int flagInsercao = 0, indiceInicio=-1, indiceFim,n,m;
+    int flagLinha = 0;
     
     while(num != 8){
 
@@ -41,6 +42,7 @@ int main (){
         if(num == 3){
             pegarMLinha(string,indiceInicio,&m);
             linha(&lista,m);
+            flagLinha = 1;
         } 
         if(num == 4)
         {
@@ -74,10 +76,10 @@ int main (){
                 __fpurge(stdin);
 
                 if(ehCaracterValido(string) == OK ){
-                    inserirElemento(&lista,string);
+                    inserirElemento(&lista,string, flagLinha);
                     memset(string,'\0',80);
                 }
-                else 
+                else if(ehCaracterValido(string) == POSSIBLE_INSTRUTION)
                 {
                     pegarInstrucao(string,inst,&indiceInicio);
                     if(numInstrucao(inst) != -1){
@@ -85,6 +87,10 @@ int main (){
                         goto num;
                         break;
                     }
+                }
+                else{
+
+                    printf("O texto contem caracteres invalidos\n");
                 }
                     
             }

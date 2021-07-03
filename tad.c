@@ -147,10 +147,7 @@ TAtomo *buscarAtomoCorrente(TDLEnc *lista)
     return NULL;
 }
 
-
-
-
-int inserirElemento(TDLEnc *lista, char st[])
+int inserirElemento(TDLEnc *lista, char st[], int flagLinha)
 {
     TAtomo *pnovo = (TAtomo*) malloc(sizeof(TAtomo));
 
@@ -158,15 +155,15 @@ int inserirElemento(TDLEnc *lista, char st[])
     {
         return NO_SPACE;
     }
-
     strcpy(pnovo->info.frase, st);
     pnovo->seguinte = NULL;
+    pnovo->info.linhaCorrente = TRUE;
 
     if(vaziaLista(lista))
-    {   pnovo->info.numLinha = 1;
+    {
         pnovo->anterior = NULL;
-        lista->primeiro= lista->ultimo= pnovo;  
-        lista->ultimo->info.linhaCorrente = TRUE;
+        pnovo->info.numLinha = 1;
+        lista->primeiro = lista->ultimo = pnovo;
     }
     else{
 
@@ -176,28 +173,31 @@ int inserirElemento(TDLEnc *lista, char st[])
             free(pnovo);
             return NOT_FOUND;
         }
-
-        if( pcorrente == lista->ultimo){
+        
+        if(pcorrente == lista->ultimo)
+        {
+            lista->ultimo->info.linhaCorrente = FALSE;
             lista->ultimo->seguinte = pnovo;
+            pnovo->anterior = lista->ultimo;
+            pnovo->info.numLinha = lista->ultimo->info.numLinha + 1;
             lista->ultimo = pnovo;
-            lista->ultimo->info.numLinha = lista->ultimo->anterior->info.numLinha+1;
-            pcorrente->info.linhaCorrente = FALSE;
-            lista->ultimo->info.linhaCorrente = TRUE;
         }
-        else
-        {   pnovo->seguinte = pcorrente->seguinte;
+        else{
             pcorrente->seguinte->anterior = pnovo;
-            pcorrente->seguinte = pnovo;
+            pnovo->seguinte = pcorrente->seguinte;
             pnovo->anterior = pcorrente;
-            pnovo->info.numLinha = pcorrente->info.numLinha+1;
+            pcorrente->seguinte = pnovo;
+            pnovo->info.numLinha = pcorrente->info.numLinha + 1; 
             pcorrente->info.linhaCorrente = FALSE;
-            pnovo->info.linhaCorrente = TRUE;
-        }
 
+            if(flagLinha == 1)
+            {
+                pnovo->seguinte->info.numLinha++;
+            }
+        }
     }
-    lista->numElem +=1;
+    lista->numElem++;
     return OK;
-         
  }
    
 
@@ -208,14 +208,14 @@ int ehCaracterValido(char st[]){
     {
         if(!isalpha(st[i])) 
         {
-            if(st[i] != ' ')
-             {
-                 if(st[i]!= '-' && st[i] != '.' && st[i] != ',' && st[i] != ';' && st[i] != ':' && st[i] != '+')
-                 {
-                    printf("O texto contem caracteres invalidos\n");
-                    return ERROR;
-                 }
-             }   
+            if(st[i] == '$')
+                return POSSIBLE_INSTRUTION;
+ 
+            if(st[i] != ' ' &&  st[i]!= '-' && st[i] != '.' && st[i] != ',' && st[i] != ';' && st[i] != ':' && st[i] != '+')
+            {
+                return ERROR;
+            }
+                
         }
        
     }
@@ -223,23 +223,27 @@ int ehCaracterValido(char st[]){
 
 }
 
-void linha(TDLEnc *lista,int n ){
+void linha(TDLEnc *lista,int n){
 
+    TAtomo *pcorrente = buscarAtomoCorrente(lista);
     if(n == 0)
     {
 
+    }
+    
+    if(pcorrente!= NULL)
+    {
+        pcorrente->info.linhaCorrente = FALSE;
     }
 
     for(TAtomo *paux= lista->primeiro; paux != NULL; paux = paux->seguinte)
     {
         if(paux->info.numLinha == n)
         {
-
             paux->info.linhaCorrente = TRUE;
             break;
         } 
     }
-
 }
 
 void copiarStringDadoIndice(int indiceInicio, int indiceFim, char destino[],char origem[])

@@ -7,6 +7,7 @@
 #define LIST_EMPTY 2 // Lista vazia
 #define NO_SPACE 3 // Não há espaço de memória
 #define ERROR -3 // Erro na operacao
+#define POSSIBLE_INSTRUTION 4 // Codigo para uma possivel instrucao
 
 typedef enum Boolean{FALSE = 0, TRUE = 1}Boolean;
 
@@ -54,15 +55,14 @@ void criarLista(TDLEnc *lista);
 Boolean vaziaLista(TDLEnc *lista);
 void imprimirLista(TDLEnc *lista);
 Boolean listaUnitaria(TDLEnc *lista);
-int inserirElemento(TDLEnc *lista, char st[]);
+int inserirElemento(TDLEnc *lista, char st[], int flagLinha);
 Boolean listaUnitaria(TDLEnc *lista);
 void imprimirLista(TDLEnc *lista);
 void imprimirLinhaMAteN(TDLEnc *lista, int m, int n);
 void imprimirUltimo(TDLEnc *lista);
 TAtomo *buscarAtomoCorrente(TDLEnc *lista);
-int inserirElemento(TDLEnc *lista, char st[]);
 int ehCaracterValido(char st[]);
-void linha(TDLEnc *lista,int n );
+void linha(TDLEnc *lista,int n);
 void copiarStringDadoIndice(int indiceInicio, int indiceFim, char destino[],char origem[]);
 void pegarN(int indiceInicio, int indiceFim, char destino[],char origem[], int *n);
 void pegarM(int indiceInicio, int indiceFim, char destino[],char origem[], int *m);
