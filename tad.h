@@ -36,13 +36,19 @@ typedef struct TDLEnc{
 /* 
   Entrada: Uma string com a instrucao;
   Saída : Um codigo correspondente a instrucao;
-  Pré-Condições: De;
-  Pós-Condições: Criar um número racional;
+  Pré-Condições: A string nao pode ser fazia;
+  Pós-Condições: ;
 
 */
 int numInstrucao( char instrucao[]);
 
+/* 
+  Entrada: Uma stri;
+  Saída : Um codigo correspondente a instrucao;
+  Pré-Condições: A string nao pode ser fazia;
+  Pós-Condições: ;
 
+*/
 void copiarString(char dest[], char orig[]);
 void criarLista(TDLEnc *lista);
 Boolean vaziaLista(TDLEnc *lista);

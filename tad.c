@@ -148,46 +148,59 @@ TAtomo *buscarAtomoCorrente(TDLEnc *lista)
 }
 
 
+
+
 int inserirElemento(TDLEnc *lista, char st[])
 {
-
     TAtomo *pnovo = (TAtomo*) malloc(sizeof(TAtomo));
-    if(pnovo == NULL)   return NO_SPACE;
+
+    if(pnovo == NULL) 
+    {
+        return NO_SPACE;
+    }
 
     strcpy(pnovo->info.frase, st);
-    pnovo->info.numLinha = lista->numElem+1;
     pnovo->seguinte = NULL;
+
     if(vaziaLista(lista))
-    {
+    {   pnovo->info.numLinha = 1;
         pnovo->anterior = NULL;
         lista->primeiro= lista->ultimo= pnovo;  
+        lista->ultimo->info.linhaCorrente = TRUE;
     }
     else{
 
         TAtomo *pcorrente = buscarAtomoCorrente(lista);
-        if(pcorrente != NULL){
-
-            if( pcorrente == lista->ultimo){
-                lista->ultimo->seguinte = pnovo;
-                lista->ultimo = pnovo;
-            }
-            else
-            {   pnovo->seguinte = lista->primeiro->seguinte;
-                lista->primeiro->seguinte->anterior= pnovo;
-                lista->primeiro->seguinte = pnovo;
-            }
-
+        if(pcorrente == NULL)
+        {
+            free(pnovo);
+            return NOT_FOUND;
         }
-        else{
-             pnovo->anterior = lista->ultimo;
-             lista->ultimo->seguinte = pnovo;
+
+        if( pcorrente == lista->ultimo){
+            lista->ultimo->seguinte = pnovo;
             lista->ultimo = pnovo;
+            lista->ultimo->info.numLinha = lista->ultimo->anterior->info.numLinha+1;
+            pcorrente->info.linhaCorrente = FALSE;
+            lista->ultimo->info.linhaCorrente = TRUE;
         }
-       
+        else
+        {   pnovo->seguinte = pcorrente->seguinte;
+            pcorrente->seguinte->anterior = pnovo;
+            pcorrente->seguinte = pnovo;
+            pnovo->anterior = pcorrente;
+            pnovo->info.numLinha = pcorrente->info.numLinha+1;
+            pcorrente->info.linhaCorrente = FALSE;
+            pnovo->info.linhaCorrente = TRUE;
+        }
+
     }
     lista->numElem +=1;
     return OK;
-}
+         
+ }
+   
+
 
 int ehCaracterValido(char st[]){
 
@@ -197,7 +210,7 @@ int ehCaracterValido(char st[]){
         {
             if(st[i] != ' ')
              {
-                 if(st[i]!= '-')
+                 if(st[i]!= '-' && st[i] != '.' && st[i] != ',' && st[i] != ';' && st[i] != ':' && st[i] != '+')
                  {
                     printf("O texto contem caracteres invalidos\n");
                     return ERROR;
@@ -380,6 +393,7 @@ int removerMN(TDLEnc *lista, int n, int m)
                         pdel->anterior->info.linhaCorrente= TRUE;
                     }
                     free(pdel);
+                    lista->numElem--;
                 }
             }
         }
