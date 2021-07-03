@@ -46,16 +46,6 @@ int numInstrucao( char instrucao[]){
     
 }
 
-void copiarString(char dest[], char orig[])
-{
-    int i=0;
-    for(;orig[i] != '\0';i++)
-    {
-        dest[i] = orig[i];
-    }
-    dest[i]='\0';
-}
-
 void criarLista(TDLEnc *lista){
 
     lista->primeiro = NULL;
@@ -67,12 +57,6 @@ Boolean vaziaLista(TDLEnc *lista){
 
     return (lista->primeiro == NULL &&  lista->ultimo == NULL && lista->numElem == 0);
 }
-
-Boolean listaUnitaria(TDLEnc *lista){
-
-    return (lista->primeiro != NULL && lista->ultimo != NULL && lista->numElem == 1);
-}
-
 void imprimirLista(TDLEnc *lista){
 
     if(lista->primeiro != NULL && lista->ultimo != NULL)
@@ -80,7 +64,14 @@ void imprimirLista(TDLEnc *lista){
         printf("--------------------------------------------------------------\n");
         for(TAtomo *paux = lista->primeiro; paux != NULL; paux = paux->seguinte)
         {
-            printf("%d %s\n",paux->info.numLinha, paux->info.frase);
+            if(paux->info.linhaCorrente == TRUE)
+            {
+                printf("→ %d %s\n",paux->info.numLinha, paux->info.frase);
+            }
+            else{
+                printf("%d %s\n",paux->info.numLinha, paux->info.frase);
+            }
+            
         }
         printf("--------------------------------------------------------------\n\n");
     }
@@ -200,7 +191,6 @@ int inserirElemento(TDLEnc *lista, char st[], int flagLinha)
     return OK;
  }
    
-
 
 int ehCaracterValido(char st[]){
 
@@ -559,16 +549,6 @@ void pegarStringsEmAlterar(char string[], char subString1[], char subString2[])
         subString2[k] = '\0';
     }
     
-}
-
-TAtomo *pegarAtomo(TDLEnc *lista){
-
-    for(TAtomo *paux = lista->primeiro; paux != NULL; paux = paux->seguinte)
-    {
-        if(paux->info.linhaCorrente == TRUE)
-            return paux;
-    }
-    return NULL;
 }
 
 void pegarPosicaoString(TAtomo *paux, char subs[], int *posInicial, int *posFinal){
