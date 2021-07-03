@@ -61,7 +61,6 @@ void criarLista(TDLEnc *lista){
     lista->primeiro = NULL;
     lista->ultimo = NULL;
     lista->numElem = 0;
-    printf("Lista criada com sucesso\n");
 }
 
 Boolean vaziaLista(TDLEnc *lista){
@@ -222,7 +221,7 @@ void linha(TDLEnc *lista,int n ){
     {
         if(paux->info.numLinha == n)
         {
-            printf("n:%d foi marcado como corrente",n);
+
             paux->info.linhaCorrente = TRUE;
             break;
         } 
@@ -423,14 +422,11 @@ int localizarString(TDLEnc *lista, char subs[]){
 
     if(lista->primeiro != NULL && lista->ultimo != NULL)
     {
-        printf("subs em localizar:%s\n", subs);
         int tamanhoSubs = strlen(subs);
         TAtomo *paux;
         int i, k = 0, tamStringLocalizada = 0 , flagImpressao = 0, vezesAImprimir = 0;
         for(paux = lista->primeiro; paux != NULL; paux= paux->seguinte)
         {
-            printf("%d ", paux->info.numLinha);
-
             for(i=0; paux->info.frase[i] != '\0'; i++)
             {
                 k=0;
@@ -488,7 +484,6 @@ int encontrardelimitador(char frase [], int pos)
             return i;
         }
     }
-
     return NOT_FOUND;
 }
 
@@ -500,7 +495,6 @@ void pegarStringsEmAlterar(char string[], char subString1[], char subString2[])
     int posDelimitador2 = encontrardelimitador(string, posDelimitador1+1);
     int posDelimitador3 = strlen(string) - 1;
     int i=posDelimitador1+1, k=0;
-    printf("1:%d 2:%d 3:%d", posDelimitador1,posDelimitador2,posDelimitador3);
 
     if(posDelimitador1 != -1 && posDelimitador2 != -1)
     {
@@ -560,35 +554,6 @@ void pegarPosicaoString(TAtomo *paux, char subs[], int *posInicial, int *posFina
                 break;
             }
         }
-        printf("posInicial: %d  posFinal:%d", *posInicial, *posFinal);
-        /*int tamanhoSubs = strlen(subs);
-        int i, k = 0, tamStringLocalizada = 0 ;
-        for(i = 0; paux->info.frase[i] != '\0'; i++)
-        {
-            k=0;
-            tamStringLocalizada = 0;
-            
-            for(int j = 0; j<=tamanhoSubs-1; j++)
-            {
-                if(paux->info.frase[i+k] != '\0')
-                { 
-                    if(paux->info.frase[i+k] == subs[j])
-                    {
-                        tamStringLocalizada++;
-                    }
-                }
-                 k++;
-            }
-            if(tamanhoSubs == tamStringLocalizada) 
-            {
-                *posInicial = i;
-                *posFinal = k;
-                printf("i: %d  k:%d", i,k);
-                return;
-            }
-    
-        }*/
-
 }
 
 
@@ -607,7 +572,6 @@ void alterarString(TDLEnc *lista, char subString1[], char subString2[])
         while(flagParagem==0)
         {
             pegarPosicaoString(paux,subString1, &posInicial, &posFinal);
-            printf("\nInicio: %d, Fim: %d\n", posInicial, posFinal);
 
             if(posInicial != posFinal)
             {

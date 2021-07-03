@@ -33,8 +33,16 @@ typedef struct TDLEnc{
 
 }TDLEnc;
 
+/* 
+  Entrada: Uma string com a instrucao;
+  Saída : Um codigo correspondente a instrucao;
+  Pré-Condições: De;
+  Pós-Condições: Criar um número racional;
 
+*/
 int numInstrucao( char instrucao[]);
+
+
 void copiarString(char dest[], char orig[]);
 void criarLista(TDLEnc *lista);
 Boolean vaziaLista(TDLEnc *lista);

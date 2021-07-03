@@ -20,7 +20,6 @@ int main (){
     
     while(num != 8){
 
-        printf("Entre com a instrucao\n");
         scanf("%[^\n]", string);
          __fpurge(stdin);
 
