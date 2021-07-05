@@ -348,19 +348,26 @@ void pegarInstrucao(char st[], char inst [], int *pos){
                 }
                 if(isalpha(st[j]))
                 {
-                    inst[k++] = st[j];
+                    if(toupper(st[j]))
+                    {
+                        inst[k++] = tolower(st[j]);
+                    }
+                    else{
+                        inst[k++] = st[j];
+                    }
                 }
             }
             inst[k] = '\0';
-            tolower(inst);
            *pos = i;
+           if(isalpha(st[i]) && st[i+1] == ' ')
+            {
+                *pos = i+1;
+            } 
+       
+           break;
         }
 
-        if(isalpha(st[i]) && st[i+1] == ' ')
-        {
-            *pos = i+1;
-        }   
-       
+        
     }
     
 }
@@ -533,8 +540,8 @@ void pegarStringsEmAlterar(char string[], char subString1[], char subString2[])
     int posDelimitador2 = encontrardelimitador(string, posDelimitador1+1);
     int posDelimitador3 = strlen(string) - 1;
     int i=posDelimitador1+1, k=0;
-
-    if(posDelimitador1 != -1 && posDelimitador2 != -1)
+    printf("pos1: %d, pos2 %d, pos3: %d", posDelimitador1, posDelimitador2, posDelimitador3);
+    if(posDelimitador1 != -1 && posDelimitador2 != -1 && posDelimitador3 != -1)
     {
         for(; i < posDelimitador2; i++)
         {
@@ -568,7 +575,7 @@ void pegarPosicaoString(TAtomo *paux, char subs[], int *posInicial, int *posFina
         int sizeFrase = strlen(paux -> info.frase);
         int flagFound = 1;
 
-        for (; i + sizeSub <= sizeFrase; i++ ) {
+        for (; i + sizeSub <= sizeFrase; i++) {
             flagFound = 1;
             for (int j = 0; j < sizeSub; j++) {
                 if (subs[j] != paux -> info.frase[j + i]) {
