@@ -564,29 +564,41 @@ void pegarStringsEmAlterar(char string[], char subString1[], char subString2[])
     int posDelimitador1 = encontrardelimitador(string, posIni);
     int posDelimitador2 = encontrardelimitador(string, posDelimitador1 + 1);
     int posDelimitador3 = strlen(string) - 1;
-    int i = posDelimitador1 + 1, k = 0;
-    printf("pos1: %d, pos2 %d, pos3: %d", posDelimitador1, posDelimitador2, posDelimitador3);
-    if (posDelimitador1 != -1 && posDelimitador2 != -1 && posDelimitador3 != -1)
+    int i=posDelimitador1+1, k=0;
+    printf("pos1: %d, pos2 %d, pos3: %d\n", posDelimitador1, posDelimitador2, posDelimitador3);
+    if(posDelimitador1 != -1 && posDelimitador2 != -1 && posDelimitador3 != -1)
     {
-        for (; i < posDelimitador2; i++)
+        if(posDelimitador2 == posDelimitador3)
         {
-            if (isalpha(string[i]))
-            {
-                subString1[k++] = string[i];
-            }
+             printf("Sintaxe do comando alterar errada!");
         }
-        subString1[k] = '\0';
-        k = 0;
-
-        i = posDelimitador2 + 1;
-        for (; i < posDelimitador3; i++)
-        {
-            if (isalpha(string[i]))
+        else{
+            for(; i < posDelimitador2; i++)
             {
-                subString2[k++] = string[i];
+                if(isalpha(string[i]))
+                {
+                    subString1[k++] = string[i];
+                }
+                
             }
+            subString1[k] = '\0';
+            k = 0;
+        
+            i=posDelimitador2+1;
+            for(; i < posDelimitador3; i++)
+            {
+                if(isalpha(string[i]))
+                {
+                    subString2[k++] = string[i];
+                }
+                
+            }
+            subString2[k] = '\0';
         }
-        subString2[k] = '\0';
+        
+    }
+    else{
+        printf("Sintaxe do comando alterar errada!");
     }
 }
 
@@ -627,64 +639,76 @@ void alterarString(TDLEnc *lista, char subString1[], char subString2[])
     }
     else
     {
-        char texto[MAX];
-        int posInicial = 0, posFinal = 0, j = 0, i = 0, k = 0, flagParagem = 0, f = 0;
-        int tamString = strlen(paux->info.frase), tamString2 = 0;
-
-        pegarPosicaoString(paux, subString1, &posInicial, &posFinal);
-
-        if (posInicial != posFinal)
+        if(subString1[0] == '\0' && subString2[0] == '\0')
         {
-            posFinal = 0;
-            posInicial = 0;
+            printf("Erro: Sintaxe do comando errada\n");
+        }
+        else{
 
-            while (flagParagem == 0)
+            char texto[MAX];
+            int posInicial = 0, posFinal = 0, j=0, i=0, k=0, flagParagem=0, f=0;
+            int tamString = strlen(paux->info.frase), tamString2=0;
+            while(flagParagem==0)
             {
-                pegarPosicaoString(paux, subString1, &posInicial, &posFinal);
+                posFinal = 0;
+                posInicial = 0;
 
-                if (posInicial != posFinal)
+                while (flagParagem == 0)
                 {
-                    for (; i < posInicial; i++)
+                    pegarPosicaoString(paux, subString1, &posInicial, &posFinal);
+
+                    if (posInicial != posFinal)
                     {
-                        texto[k++] = paux->info.frase[i];
-                    }
-                    texto[k] = '\0';
+                        for (; i < posInicial; i++)
+                        {
+                            texto[k++] = paux->info.frase[i];
+                        }
+                        texto[k] = '\0';
 
-                    for (j = 0; j < strlen(subString2); j++)
+                        for (j = 0; j < strlen(subString2); j++)
+                        {
+                            texto[k++] = subString2[j];
+                        }
+                        texto[k] = '\0';
+                    }
+                    else
                     {
-                        texto[k++] = subString2[j];
+                        for (int c = posInicial; c < tamString; c++)
+                        {
+                            texto[k++] = paux->info.frase[c];
+                        }
+                        texto[k] = '\0';
                     }
-                    texto[k] = '\0';
-                }
-                else
-                {
-                    for (int c = posInicial; c < tamString; c++)
+
+                    if (posInicial == tamString)
                     {
-                        texto[k++] = paux->info.frase[c];
+                        flagParagem = 1;
                     }
-                    texto[k] = '\0';
+                    else
+                    {
+                        i = posFinal;
+                        posInicial = posFinal;
+                    }
                 }
 
-                if (posInicial == tamString)
+                tamString2 = strlen(texto);
+
+                for (; f < tamString2; f++)
                 {
-                    flagParagem = 1;
+                    paux->info.frase[f] = texto[f];
                 }
-                else
-                {
-                    i = posFinal;
-                    posInicial = posFinal;
-                }
-            }
+                paux->info.frase[f] = '\0';
+            } 
 
-            tamString2 = strlen(texto);
-
-            for (; f < tamString2; f++)
+            tamString2= strlen(texto);
+            
+            for(; f< tamString2; f++)
             {
                 paux->info.frase[f] = texto[f];
-            }
+            } 
             paux->info.frase[f] = '\0';
-        } else {
-            printf("\nPalavra nao encontrada\n");
-        }
-    }
+        }    
+
+  }
+        
 }
