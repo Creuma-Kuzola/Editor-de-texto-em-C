@@ -564,40 +564,39 @@ void pegarStringsEmAlterar(char string[], char subString1[], char subString2[])
     int posDelimitador1 = encontrardelimitador(string, posIni);
     int posDelimitador2 = encontrardelimitador(string, posDelimitador1 + 1);
     int posDelimitador3 = strlen(string) - 1;
-    int i=posDelimitador1+1, k=0;
+    int i = posDelimitador1 + 1, k = 0;
     printf("pos1: %d, pos2 %d, pos3: %d\n", posDelimitador1, posDelimitador2, posDelimitador3);
-    if(posDelimitador1 != -1 && posDelimitador2 != -1 && posDelimitador3 != -1)
+    if (posDelimitador1 != -1 && posDelimitador2 != -1 && posDelimitador3 != -1)
     {
-        if(posDelimitador2 == posDelimitador3)
+        if (posDelimitador2 == posDelimitador3)
         {
-             printf("Sintaxe do comando alterar errada!");
+            printf("Sintaxe do comando alterar errada!");
         }
-        else{
-            for(; i < posDelimitador2; i++)
+        else
+        {
+            for (; i < posDelimitador2; i++)
             {
-                if(isalpha(string[i]))
+                if (isalpha(string[i]))
                 {
                     subString1[k++] = string[i];
                 }
-                
             }
             subString1[k] = '\0';
             k = 0;
-        
-            i=posDelimitador2+1;
-            for(; i < posDelimitador3; i++)
+
+            i = posDelimitador2 + 1;
+            for (; i < posDelimitador3; i++)
             {
-                if(isalpha(string[i]))
+                if (isalpha(string[i]))
                 {
                     subString2[k++] = string[i];
                 }
-                
             }
             subString2[k] = '\0';
         }
-        
     }
-    else{
+    else
+    {
         printf("Sintaxe do comando alterar errada!");
     }
 }
@@ -639,56 +638,74 @@ void alterarString(TDLEnc *lista, char subString1[], char subString2[])
     }
     else
     {
-        if(subString1[0] == '\0' && subString2[0] == '\0')
+        if (subString1[0] == '\0' && subString2[0] == '\0')
         {
             printf("Erro: Sintaxe do comando errada\n");
         }
-        else{
+        else
+        {
 
             char texto[MAX];
-            int posInicial = 0, posFinal = 0, j=0, i=0, k=0, flagParagem=0, f=0;
-            int tamString = strlen(paux->info.frase), tamString2=0;
-            while(flagParagem==0)
+            int posInicial = 0, posFinal = 0, j = 0, i = 0, k = 0, flagParagem = 0, f = 0;
+            int tamString = strlen(paux->info.frase), tamString2 = 0;
+
+            pegarPosicaoString(paux, subString1, &posInicial, &posFinal);
+
+            if (posInicial != posFinal)
             {
-                posFinal = 0;
                 posInicial = 0;
+                posFinal = 0;
 
                 while (flagParagem == 0)
                 {
-                    pegarPosicaoString(paux, subString1, &posInicial, &posFinal);
+                    posFinal = 0;
+                    posInicial = 0;
 
-                    if (posInicial != posFinal)
+                    while (flagParagem == 0)
                     {
-                        for (; i < posInicial; i++)
-                        {
-                            texto[k++] = paux->info.frase[i];
-                        }
-                        texto[k] = '\0';
+                        pegarPosicaoString(paux, subString1, &posInicial, &posFinal);
 
-                        for (j = 0; j < strlen(subString2); j++)
+                        if (posInicial != posFinal)
                         {
-                            texto[k++] = subString2[j];
+                            for (; i < posInicial; i++)
+                            {
+                                texto[k++] = paux->info.frase[i];
+                            }
+                            texto[k] = '\0';
+
+                            for (j = 0; j < strlen(subString2); j++)
+                            {
+                                texto[k++] = subString2[j];
+                            }
+                            texto[k] = '\0';
                         }
-                        texto[k] = '\0';
-                    }
-                    else
-                    {
-                        for (int c = posInicial; c < tamString; c++)
+                        else
                         {
-                            texto[k++] = paux->info.frase[c];
+                            for (int c = posInicial; c < tamString; c++)
+                            {
+                                texto[k++] = paux->info.frase[c];
+                            }
+                            texto[k] = '\0';
                         }
-                        texto[k] = '\0';
+
+                        if (posInicial == tamString)
+                        {
+                            flagParagem = 1;
+                        }
+                        else
+                        {
+                            i = posFinal;
+                            posInicial = posFinal;
+                        }
                     }
 
-                    if (posInicial == tamString)
+                    tamString2 = strlen(texto);
+
+                    for (; f < tamString2; f++)
                     {
-                        flagParagem = 1;
+                        paux->info.frase[f] = texto[f];
                     }
-                    else
-                    {
-                        i = posFinal;
-                        posInicial = posFinal;
-                    }
+                    paux->info.frase[f] = '\0';
                 }
 
                 tamString2 = strlen(texto);
@@ -698,17 +715,9 @@ void alterarString(TDLEnc *lista, char subString1[], char subString2[])
                     paux->info.frase[f] = texto[f];
                 }
                 paux->info.frase[f] = '\0';
-            } 
-
-            tamString2= strlen(texto);
-            
-            for(; f< tamString2; f++)
-            {
-                paux->info.frase[f] = texto[f];
-            } 
-            paux->info.frase[f] = '\0';
-        }    
-
-  }
-        
+            } else {
+                printf("\nPalavra nao encontrada\n");
+            }
+        }
+    }
 }
