@@ -352,9 +352,14 @@ void pegarInstrucao(char st[], char inst [], int *pos){
                 }
             }
             inst[k] = '\0';
-            printf("Inst:%s", inst);
+            tolower(inst);
            *pos = i;
         }
+
+        if(isalpha(st[i]) && st[i+1] == ' ')
+        {
+            *pos = i+1;
+        }   
        
     }
     
