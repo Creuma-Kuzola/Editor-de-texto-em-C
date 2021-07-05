@@ -7,7 +7,6 @@
 
 int numInstrucao(char instrucao[])
 {
-
     if (instrucao[0] == '$')
     {
 
@@ -15,17 +14,14 @@ int numInstrucao(char instrucao[])
         {
             return 1;
         }
-
         if (strcmp(instrucao, "$remover") == 0)
         {
             return 2;
         }
-
         if (strcmp(instrucao, "$linha") == 0)
         {
             return 3;
         }
-
         if (strcmp(instrucao, "$localizar") == 0)
         {
             return 4;
@@ -50,6 +46,12 @@ int numInstrucao(char instrucao[])
         {
             return 8;
         }
+
+        if(strcmp(instrucao, "$prnenv") == 0)
+        {   
+            return 9;
+        }
+
         return -1;
     }
     return -1;
@@ -65,9 +67,9 @@ void criarLista(TDLEnc *lista)
 
 Boolean vaziaLista(TDLEnc *lista)
 {
-
     return (lista->primeiro == NULL && lista->ultimo == NULL && lista->numElem == 0);
 }
+
 void imprimirLista(TDLEnc *lista)
 {
 
@@ -89,18 +91,18 @@ void imprimirLista(TDLEnc *lista)
     }
     else
     {
-        printf("Erro: Impossivel imprimir, a lista esta vazia");
+        printf("Erro: Impossivel imprimir, a lista esta vazia\n");
     }
 }
 
 void imprimirLinhaMAteN(TDLEnc *lista, int m, int n)
 {
-
     if (lista->primeiro != NULL && lista->ultimo != NULL)
     {
-
         if (m >= 1 && n <= lista->ultimo->info.numLinha)
         {
+            /*
+            Antes de imprimir
             if (m <= n)
             {
 
@@ -113,7 +115,28 @@ void imprimirLinhaMAteN(TDLEnc *lista, int m, int n)
                     }
                 }
                 printf("--------------------------------------------------------------\n\n");
-            }
+            }*/
+
+                printf("--------------------------------------------------------------\n");
+                TAtomo *actual = lista -> primeiro;
+                int i = 0;
+                int contador = 0;
+
+                for (TAtomo *paux = lista->primeiro; paux != NULL; paux = paux->seguinte)
+                {
+                    if (paux->info.numLinha >= m && paux->info.numLinha <= n)
+                    {
+                        if(paux->info.linhaCorrente == TRUE)
+                        {
+                            printf("\n\r%d → %s\n", paux->info.numLinha, paux->info.frase);
+                        }
+                        else{
+                            printf("%d %s\n", paux->info.numLinha, paux->info.frase);
+                        }
+                    }
+                }
+                printf("--------------------------------------------------------------\n\n");
+
         }
         else if (m < 1)
         {
@@ -132,7 +155,6 @@ void imprimirLinhaMAteN(TDLEnc *lista, int m, int n)
 
 void imprimirUltimo(TDLEnc *lista)
 {
-
     if (lista->primeiro != NULL && lista->ultimo != NULL)
     {
         printf("%d\n", lista->ultimo->info.numLinha);
@@ -175,14 +197,12 @@ int inserirElemento(TDLEnc *lista, char st[], int flagLinha)
     }
     else
     {
-
         TAtomo *pcorrente = buscarAtomoCorrente(lista);
         if (pcorrente == NULL)
         {
             free(pnovo);
             return NOT_FOUND;
         }
-
         if (pcorrente == lista->ultimo)
         {
             lista->ultimo->info.linhaCorrente = FALSE;
@@ -212,7 +232,6 @@ int inserirElemento(TDLEnc *lista, char st[], int flagLinha)
 
 int ehCaracterValido(char st[])
 {
-
     for (int i = 0; st[i] != '\0'; i++)
     {
         if (!isalpha(st[i]))
@@ -231,7 +250,6 @@ int ehCaracterValido(char st[])
 
 void linha(TDLEnc *lista, int n, int *flagLinha)
 {
-
     if (n == 0)
     {
         *flagLinha = 1;
@@ -398,7 +416,6 @@ void pegarInstrucao(char st[], char inst[], int *pos)
 
 TAtomo *buscarAtomoDadaChave(TDLEnc *lista, int chave)
 {
-
     for (TAtomo *paux = lista->primeiro; paux != NULL; paux = paux->seguinte)
     {
         if (paux->info.numLinha == chave)
@@ -570,7 +587,7 @@ void pegarStringsEmAlterar(char string[], char subString1[], char subString2[])
     {
         if (posDelimitador2 == posDelimitador3)
         {
-            printf("Sintaxe do comando alterar errada!");
+            printf("Sintaxe do comando alterar errada!\n");
         }
         else
         {
@@ -597,7 +614,7 @@ void pegarStringsEmAlterar(char string[], char subString1[], char subString2[])
     }
     else
     {
-        printf("Sintaxe do comando alterar errada!");
+        printf("Sintaxe do comando alterar errada!\n");
     }
 }
 
@@ -706,4 +723,57 @@ void alterarString(TDLEnc *lista, char subString1[], char subString2[])
             }
         }
     }
+}
+
+
+TAtomo *pegarAtomoDadaChave(TDLEnc *lista, int numLinha)
+{
+    if(lista->primeiro != NULL && lista->ultimo != NULL)
+    {
+        for(TAtomo *paux = lista->primeiro; paux != NULL; paux = paux->seguinte)
+        {
+            if(paux->info.numLinha == numLinha)
+            {
+                return paux;
+            }  
+        }
+        return NULL;
+    }
+    else{
+        printf("Nao e possivel mostrar, a lista esta vazia\n");
+    }
+}
+
+void mostrarDeFormaInversa(TDLEnc *lista, int m, int n)
+{
+    TAtomo *plinha = pegarAtomoDadaChave(lista,m);
+    if(plinha == NULL)
+    {
+        printf("Nao existe nenhuma linha com esse numero\n");
+    }
+
+    if((m>= 1 && m<= lista->numElem) && (n>=1 && n<=lista->numElem))
+    {
+        if(plinha == lista->primeiro)
+        {
+            printf("%d %s \n",plinha->info.numLinha,plinha->info.frase);
+        }
+        else
+        {
+
+            TAtomo *paux = plinha;
+            int numImpressao=1;
+            printf("--------------------------------------------------------------\n");
+            for(; plinha != NULL && numImpressao <=n; plinha = plinha->anterior)
+            {
+                printf("%d %s\n",plinha->info.numLinha,plinha->info.frase);
+                numImpressao++;
+            }
+            printf("--------------------------------------------------------------\n\n");
+        }
+    }
+    else{
+        printf("N ou M estao com numeros invalidos\n");
+    }
+
 }
