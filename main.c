@@ -91,7 +91,6 @@ int main (){
                     }
                 }
                 else{
-
                     printf("O texto contem caracteres invalidos\n");
                 }
                     

@@ -251,33 +251,33 @@ void linha(TDLEnc *lista,int n, int *flagLinha){
 
 void copiarStringDadoIndice(int indiceInicio, int indiceFim, char destino[],char origem[])
 {
-    int k=0;
-    while(indiceInicio<=indiceFim){
-        
-        if(origem[0] == '$'){
-            destino[k] = origem[indiceInicio];
-        }
-        else{
-            break;
-        }
-
-        if(k>0){
-            if(isalpha(origem[k]))
-            {
-                destino[k] = origem[indiceInicio];
-            }
-            else{
-                printf("Erro: a instrucao contem caracteres que nao sao letras\n");
-                break;
-            }
-        }
-        k++;
+    int k=1;
+    printf("%s: origem", origem);
+    if(origem[0] == '$'){
+        destino[0] = origem[0];
         indiceInicio++;
-        
+        while(indiceInicio<=indiceFim){
+            printf("ini: %d  fim:%d", indiceInicio, indiceFim);
+            if(isalpha(origem[indiceInicio]))
+            {
+                printf("Entrei");
+                destino[k] = origem[indiceInicio];
+                printf("Dentro: k: %d i:%d\n", k, indiceInicio);
+                printf("%c: origem", origem[indiceInicio]);
+            }
+            k++;
+            indiceInicio++;
+            printf("Fora: k: %d i:%d\n", k, indiceInicio);
+        }
+            destino[k] = '\0';
+            printf("\nstring:%s\n", destino);
     }
-    destino[k] = '\0';
+    else{
+        printf("Bla bla\n");
+    }
+    
 }
-
+    
 void pegarN(int indiceInicio, int indiceFim, char destino[],char origem[], int *n)
 {
     int k=0;
@@ -332,27 +332,32 @@ void pegarMLinha(char st[], int indiceInicio,int *m){
     pegarM(indiceInicio+1,i,numMFim,st,m);
 }
 
-int pegarInstrucao(char st[], char inst [], int *pos){
-    
-    int indiceInicio = 0;
+void pegarInstrucao(char st[], char inst [], int *pos){
     int i;
-
+    int k=0;
     for(i=0;st[i] != '\0';i++){
-
-        if(st[i] == ' ' && isalpha(st[i-1]))
+        if(isalpha(st[i]) && st[i+1] == '\0' || isalpha(st[i]) && st[i+1] == ' ')
         {
-           copiarStringDadoIndice(indiceInicio,i-1,inst,st);
+            int j = 0;
+            for(; j<= i; j++)
+            {
+                if(j== 0 && st[j] == '$')
+                {
+                    inst[k] = st[j];
+                    k++;
+                }
+                if(isalpha(st[j]))
+                {
+                    inst[k++] = st[j];
+                }
+            }
+            inst[k] = '\0';
+            printf("Inst:%s", inst);
            *pos = i;
-           return OK;
         }
+       
+    }
     
-    }
-    if(isalpha(st[i-1])){
-      copiarStringDadoIndice(indiceInicio,i-1,inst,st);
-      return OK;
-    }
-
-    return NOT_FOUND;   
 }
 
 TAtomo *buscarAtomoDadaChave(TDLEnc *lista, int chave){

@@ -182,7 +182,7 @@ void pegarMLinha(char st[], int indiceInicio,int *m);
   Pré-Condições:n<0 || n< lista.ultimo.numLinha; 
   Pós-Condições:Verificar se ja nao ha uma linha corrente, caso haja por essa linha como false e por a linha actual como true;
 */
-int pegarInstrucao(char st[], char inst [], int *pos);
+void pegarInstrucao(char st[], char inst [], int *pos);
 
 
 /* 
