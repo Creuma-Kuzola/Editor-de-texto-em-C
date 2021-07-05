@@ -651,6 +651,8 @@ void alterarString(TDLEnc *lista, char subString1[], char subString2[])
 
             pegarPosicaoString(paux, subString1, &posInicial, &posFinal);
 
+            //printf("\nposInicial: %d, posFinal: %d\n", posInicial, posFinal);
+
             if (posInicial != posFinal)
             {
                 posInicial = 0;
@@ -658,64 +660,48 @@ void alterarString(TDLEnc *lista, char subString1[], char subString2[])
 
                 while (flagParagem == 0)
                 {
-                    posFinal = 0;
-                    posInicial = 0;
+                    pegarPosicaoString(paux, subString1, &posInicial, &posFinal);
+                    //printf("\nposInicial: %d, posFinal: %d\n", posInicial, posFinal);
 
-                    while (flagParagem == 0)
+                    if (posInicial != posFinal)
                     {
-                        pegarPosicaoString(paux, subString1, &posInicial, &posFinal);
-
-                        if (posInicial != posFinal)
+                        for (; i < posInicial; i++)
                         {
-                            for (; i < posInicial; i++)
-                            {
-                                texto[k++] = paux->info.frase[i];
-                            }
-                            texto[k] = '\0';
-
-                            for (j = 0; j < strlen(subString2); j++)
-                            {
-                                texto[k++] = subString2[j];
-                            }
-                            texto[k] = '\0';
-                        }
-                        else
-                        {
-                            for (int c = posInicial; c < tamString; c++)
-                            {
-                                texto[k++] = paux->info.frase[c];
-                            }
-                            texto[k] = '\0';
+                            texto[k++] = paux->info.frase[i];
                         }
 
-                        if (posInicial == tamString)
+                        for (j = 0; j < strlen(subString2); j++)
                         {
-                            flagParagem = 1;
-                        }
-                        else
-                        {
-                            i = posFinal;
-                            posInicial = posFinal;
+                            texto[k++] = subString2[j];
                         }
                     }
-
-                    tamString2 = strlen(texto);
-
-                    for (; f < tamString2; f++)
+                    else
                     {
-                        paux->info.frase[f] = texto[f];
+                        for (int c = posInicial; c < tamString; c++)
+                        {
+                            texto[k++] = paux->info.frase[c];
+                        }
+                        texto[k] = '\0';
+                        flagParagem = 1;
+                        break;
                     }
-                    paux->info.frase[f] = '\0';
+
+                    if (posInicial != posFinal)
+                    {
+                        i = posFinal;
+                        posInicial = posFinal;
+                    }
                 }
 
                 tamString2 = strlen(texto);
-
-                for (; f < tamString2; f++)
+                for (f = 0; f < tamString2; f++)
                 {
                     paux->info.frase[f] = texto[f];
                 }
                 paux->info.frase[f] = '\0';
-            } else {
+            }
+            else
+            {
                 printf("\nPalavra nao encontrada\n");
             }
         }
