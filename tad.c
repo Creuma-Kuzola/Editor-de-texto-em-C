@@ -460,6 +460,7 @@ int removerMN(TDLEnc *lista, int n, int m)
 
                     if (lista->numElem == 1)
                     {
+                        free(pdel);
                         criarLista(lista);
                         break;
                     }
