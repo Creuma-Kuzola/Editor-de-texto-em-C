@@ -752,29 +752,33 @@ void mostrarDeFormaInversa(TDLEnc *lista, int m, int n)
     {
         printf("Nao existe nenhuma linha com esse numero\n");
     }
-
-    if((m>= 1 && m<= lista->numElem) && (n>=1 && n<=lista->numElem))
+    else
     {
-        if(plinha == lista->primeiro)
-        {
-            printf("%d %s \n",plinha->info.numLinha,plinha->info.frase);
+       if((m>= 1 && m<= lista->numElem) && (n>=1 && n<=lista->numElem))
+       {
+            if(plinha == lista->primeiro)
+            {
+                printf("%d %s \n",plinha->info.numLinha,plinha->info.frase);
+            }
+            else
+            {
+                TAtomo *paux = plinha;
+                int numImpressao=1;
+                printf("--------------------------------------------------------------\n");
+                for(; plinha != NULL && numImpressao <=n; plinha = plinha->anterior)
+                {
+                    printf("%d %s\n",plinha->info.numLinha,plinha->info.frase);
+                    numImpressao++;
+                }
+                printf("--------------------------------------------------------------\n\n");
+            }
         }
         else
         {
-
-            TAtomo *paux = plinha;
-            int numImpressao=1;
-            printf("--------------------------------------------------------------\n");
-            for(; plinha != NULL && numImpressao <=n; plinha = plinha->anterior)
-            {
-                printf("%d %s\n",plinha->info.numLinha,plinha->info.frase);
-                numImpressao++;
-            }
-            printf("--------------------------------------------------------------\n\n");
+            printf("N ou M estao com numeros invalidos\n");
         }
-    }
-    else{
-        printf("N ou M estao com numeros invalidos\n");
-    }
+ 
+   }
 
+    
 }
