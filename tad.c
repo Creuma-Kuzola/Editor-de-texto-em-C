@@ -50,6 +50,15 @@ int numInstrucao(char *instrucao)
         {   
             return 9;
         }
+        if(strcmp(instrucao, "$deletar") == 0)
+        {   
+            return 10;
+        }
+
+        if(strcmp(instrucao, "$undo") == 0)
+        {   
+            return 11;
+        }
 
         return -1;
     }
@@ -785,7 +794,7 @@ void mostrarDeFormaInversa(TDLEnc *lista, int m, int n)
         }
         else
         {
-             error(10);
+            error(10);
         }
  
    }

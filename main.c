@@ -69,6 +69,16 @@ int main (){
             pegarNM(string,indiceInicio,&n,&m);
             mostrarDeFormaInversa(&lista,n,m);
         }
+
+        if(num == 10)
+        {
+            
+        }
+
+        if(num == 11)
+        {
+
+        }
       
         if(flagInsercao == 1){
 
