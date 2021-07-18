@@ -101,6 +101,8 @@ void imprimirLinhaMAteN(TDLEnc *lista, int m, int n)
 
         if (m >= 1 && n <= lista->ultimo->info.numLinha)
         {
+            /*
+            Antes de imprimir
             if (m <= n)
             {
 
@@ -113,7 +115,22 @@ void imprimirLinhaMAteN(TDLEnc *lista, int m, int n)
                     }
                 }
                 printf("--------------------------------------------------------------\n\n");
-            }
+            }*/
+
+                printf("--------------------------------------------------------------\n");
+                TAtomo *actual = lista -> primeiro;
+                int i = 0;
+                int contador = 0;
+
+                for (TAtomo *paux = lista->primeiro; i < ; paux = paux->seguinte)
+                {
+                    if (paux->info.numLinha >= m && paux->info.numLinha <= n)
+                    {
+                        printf("%d %s\n", paux->info.numLinha, paux->info.frase);
+                    }
+                }
+                printf("--------------------------------------------------------------\n\n");
+
         }
         else if (m < 1)
         {
