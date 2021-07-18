@@ -10,10 +10,10 @@ int main (){
     TInfo info;
     int num = -2;
     TDLEnc lista;
-    char string[80];
-    char inst[15];
-    char subString[20];
-    char subStringAlterar[20];
+    char string[MAX];
+    char *inst = (char*)(malloc(sizeof(15)));
+    char *subString = (char*)(malloc(sizeof(20)));
+    char *subStringAlterar = (char*)(malloc(sizeof(20)));
 
     criarLista(&lista);
     int flagInsercao = 0, indiceInicio=-1, indiceFim,n,m;
@@ -33,10 +33,6 @@ int main (){
         }
         if(num == 1){
             flagInsercao = 1;
-            if(flagLinha == 1)
-            {
-
-            }
         }
         if(num == 2){
             pegarNM(string,indiceInicio,&n,&m);
@@ -70,7 +66,6 @@ int main (){
         } 
         if(num == 9)
         {
-            
             pegarNM(string,indiceInicio,&n,&m);
             mostrarDeFormaInversa(&lista,n,m);
         }

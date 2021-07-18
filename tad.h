@@ -42,7 +42,7 @@ typedef struct TDLEnc{
   Pós-Condições:Retornar um codigo ;
 
 */
-int numInstrucao( char instrucao[]);
+int numInstrucao( char *instrucao);
 
 
 /* 
@@ -82,7 +82,7 @@ void imprimirLista(TDLEnc *lista);
   Caso esteja no caso do Atomo corrente, deve ser encontrado um atomo corrente;
   Pós-Condições: Inserir um atomo na lista;
 */
-int inserirElemento(TDLEnc *lista, char st[], int flagLinha);
+int inserirElemento(TDLEnc *lista, char *st, int flagLinha);
 
 
 /* 
@@ -124,7 +124,7 @@ TAtomo *buscarAtomoCorrente(TDLEnc *lista);
   Pré-Condições:A string nao pode ser vazia; 
   Pós-Condições:Verificar cada posicao da string;
 */
-int ehCaracterValido(char st[]);
+int ehCaracterValido(char *st);
 
 
 /* 
@@ -142,7 +142,7 @@ void linha(TDLEnc *lista,int n,int *flagLinha);
   Pré-Condições:n<0 || n< lista.ultimo.numLinha; 
   Pós-Condições:Verificar se ja nao ha uma linha corrente, caso haja por essa linha como false e por a linha actual como true;
 */
-void copiarStringDadoIndice(int indiceInicio, int indiceFim, char destino[],char origem[]);
+void copiarStringDadoIndice(int indiceInicio, int indiceFim, char *destino,char *origem);
 
 /* 
   Entrada:indice de inicio, indice fim, a string de destino e a string de origem;
@@ -150,7 +150,7 @@ void copiarStringDadoIndice(int indiceInicio, int indiceFim, char destino[],char
   Pré-Condições:n<0 || n< lista.ultimo.numLinha; 
   Pós-Condições:Verificar se ja nao ha uma linha corrente, caso haja por essa linha como false e por a linha actual como true;
 */
-void pegarN(int indiceInicio, int indiceFim, char destino[],char origem[], int *n);
+void pegarN(int indiceInicio, int indiceFim, char *destino,char *origem, int *n);
 
 /* 
   Entrada:indice de inicio, indice fim, a string de destino e a string de origem;
@@ -158,7 +158,7 @@ void pegarN(int indiceInicio, int indiceFim, char destino[],char origem[], int *
   Pré-Condições:n<0 || n< lista.ultimo.numLinha; 
   Pós-Condições:Verificar se ja nao ha uma linha corrente, caso haja por essa linha como false e por a linha actual como true;
 */
-void pegarM(int indiceInicio, int indiceFim, char destino[],char origem[], int *m);
+void pegarM(int indiceInicio, int indiceFim, char *destino,char *origem, int *m);
 
 /* 
   Entrada:indice de inicio, indice fim, a string de destino e a string de origem;
@@ -166,7 +166,7 @@ void pegarM(int indiceInicio, int indiceFim, char destino[],char origem[], int *
   Pré-Condições:n<0 || n< lista.ultimo.numLinha; 
   Pós-Condições:Verificar se ja nao ha uma linha corrente, caso haja por essa linha como false e por a linha actual como true;
 */
-void pegarNM(char st[], int indiceInicio, int *n, int *m);
+void pegarNM(char *st, int indiceInicio, int *n, int *m);
 
 /* 
   Entrada:indice de inicio, indice fim, a string de destino e a string de origem;
@@ -182,7 +182,7 @@ void pegarMLinha(char st[], int indiceInicio,int *m);
   Pré-Condições:n<0 || n< lista.ultimo.numLinha; 
   Pós-Condições:Verificar se ja nao ha uma linha corrente, caso haja por essa linha como false e por a linha actual como true;
 */
-void pegarInstrucao(char st[], char inst [], int *pos);
+void pegarInstrucao(char *st, char *inst, int *pos);
 
 
 /* 
@@ -199,7 +199,7 @@ int removerMN(TDLEnc *lista, int n, int m);
   Pré-Condições:n<0 || n< lista.ultimo.numLinha; 
   Pós-Condições:Verificar se ja nao ha uma linha corrente, caso haja por essa linha como false e por a linha actual como true;
 */
-void pegarSubstring(char string[], int pos, char subString[]);
+void pegarSubstring(char *string, int pos, char *subString);
 
 /* 
   Entrada:indice de inicio, indice fim, a string de destino e a string de origem;
@@ -207,7 +207,7 @@ void pegarSubstring(char string[], int pos, char subString[]);
   Pré-Condições:n<0 || n< lista.ultimo.numLinha; 
   Pós-Condições:Verificar se ja nao ha uma linha corrente, caso haja por essa linha como false e por a linha actual como true;
 */
-int localizarString(TDLEnc *lista, char subs[]);
+int localizarString(TDLEnc *lista, char *subs);
 
 /* 
   Entrada:indice de inicio, indice fim, a string de destino e a string de origem;
@@ -215,7 +215,7 @@ int localizarString(TDLEnc *lista, char subs[]);
   Pré-Condições:n<0 || n< lista.ultimo.numLinha; 
   Pós-Condições:Verificar se ja nao ha uma linha corrente, caso haja por essa linha como false e por a linha actual como true;
 */
-int encontrardelimitador(char frase [], int pos);
+int encontrardelimitador(char *frase, int pos);
 
 /* 
   Entrada:indice de inicio, indice fim, a string de destino e a string de origem;
@@ -223,7 +223,7 @@ int encontrardelimitador(char frase [], int pos);
   Pré-Condições:n<0 || n< lista.ultimo.numLinha; 
   Pós-Condições:Verificar se ja nao ha uma linha corrente, caso haja por essa linha como false e por a linha actual como true;
 */
-void pegarStringsEmAlterar(char string[], char subString1[], char subString2[]);
+void pegarStringsEmAlterar(char *string, char *subString1, char *subString2);
 
 
 /* 
@@ -232,7 +232,7 @@ void pegarStringsEmAlterar(char string[], char subString1[], char subString2[]);
   Pré-Condições:n<0 || n< lista.ultimo.numLinha; 
   Pós-Condições:Verificar se ja nao ha uma linha corrente, caso haja por essa linha como false e por a linha actual como true;
 */
-void pegarPosicaoString(TAtomo *paux, char subs[], int *posInicial, int *posFinal);
+void pegarPosicaoString(TAtomo *paux, char *subs, int *posInicial, int *posFinal);
 
 
 /* 
@@ -241,7 +241,7 @@ void pegarPosicaoString(TAtomo *paux, char subs[], int *posInicial, int *posFina
   Pré-Condições:n<0 || n< lista.ultimo.numLinha; 
   Pós-Condições:Verificar se ja nao ha uma linha corrente, caso haja por essa linha como false e por a linha actual como true;
 */
-void alterarString(TDLEnc *lista, char subString1[], char subString2[]);
+void alterarString(TDLEnc *lista, char *subString1, char *subString2);
 
 
 void mostrarDeFormaInversa(TDLEnc *lista, int m, int n);
