@@ -59,25 +59,18 @@ int numInstrucao(char *instrucao)
 void error(int errorCode)
 {
     char *errorMessages[] = {
-        "ERRO: QUANTIDADE DE PARAMETROS INSUFICIENTES",
-        "ERRO: FALTA VIRGULA",
-        "ERRO: LINHA DE ÍNICIO DEVE SER MENOR COM RELAÇÃO A LINHA DE TERMINOU\nExemplo: $remover 1, 2",
-        "ERRO: NÃO EXISTE A VIRGULA NO COMANDO",
-        "ERRO: NÃO TEM ESPAÇO NO COMANDO E DEVE EXISTIR",
-        "ERRO: LINHA NÃO VÁLIDA, LINHA NÃO VÁLIDA, LINHA NÃO MAIOR QUE 0",
-        "ERRO: REFERÊNCIA DA LINHA DE ÍNICIO MAIOR QUE A FINAL",
-        "ERRO: PRIMEIRO PARAMETRO NÃO PASSADO",
-        "ERRO: QUANTIDADE DE PARAMETROS INSUFICIENTES",
-        "ERRO: PRIMEIRO PARAMETRO NÃO PASSADO",
-        "ERRO: QUANTIDADE DE PARAMETROS INVÁLIDOS",
-        "ERRO: FALTA PARAMETROS PARA O COMANDO",
-        "ERRO: DELIMITADORES INCONSCISTENTE",
-        "ERRO: PARAMETROS ENVIADOS INSUFICIENTES",
-        "ERRO: NÃO EXISTE LINHA CORRENTE VÁLIDA",
-        "ERRO: LINHA COM A QUANTIDADE MÁXIMA DE CARACTERES ATINGIDA",
-        "ERRO: PARAMETROS INSUFICIENTES",
-        "ERRO: LINHA NÃO EXISTE",
-        "ERRO: LINHAS FORA DO FORA DO NÚMERO ACTUAL DE LINHAS NO EDITOR DE TEXTO:"};
+        "Erro: A lista esta vazia",
+        "Erro: O M é menor do que 1",
+        "Erro: O N é maior do o que número da última linha",
+        "Erro: O numero da linha é menor do que 0",
+        "Erro: O numero da linha é maior do que o número de elementos na string",
+        "Erro: String invalida",
+        "Erro: Parametros invalidos",
+        "Erro: Sintaxe do comando errada",
+        "Erro: Nao existe uma linha corrente",
+        "Erro: Nao existe nenhuma linha com esse numero",
+        "Erro: N ou M estao com numeros invalidos"
+    };
 
     printf("\n%s\n", errorMessages[errorCode]);
 }
@@ -85,9 +78,7 @@ void error(int errorCode)
 void warning(int warningCode)
 {
     char *warningsMessages[] = {
-        "AVISO: A LINHA ACTUAL JÁ ESTA SELECIONADA",
-        "AVISO: EDITOR DE TEXTO VAZIO",
-        "AVISO: PALAVRA NÃO ENCONTRADA"
+        "Aviso: PALAVRA NÃO ENCONTRADA"
         };
 
     printf("\n%s\n", warningsMessages[warningCode]);
@@ -125,7 +116,7 @@ void imprimirLista(TDLEnc *lista)
     }
     else
     {
-        printf("Erro: Impossivel imprimir, a lista esta vazia\n");
+        error(1);
     }
 }
 
@@ -158,16 +149,16 @@ void imprimirLinhaMAteN(TDLEnc *lista, int m, int n)
         }
         else if (m < 1)
         {
-            printf("Erro: o M é menor do que 1\n");
+            error(1);
         }
         else if (n > lista->ultimo->info.numLinha)
         {
-            printf("Erro: o N é maior do o que número da última linha\n");
+            error(2);
         }
     }
     else
     {
-        printf("Erro:Impossivel imprimir, a lista esta vazia\n");
+        error(1);
     }
 }
 
@@ -179,7 +170,7 @@ void imprimirUltimo(TDLEnc *lista)
     }
     else
     {
-        printf("Erro: Lista Vazia\n");
+        error(1);
     }
 }
 
@@ -276,11 +267,11 @@ void linha(TDLEnc *lista, int n, int *flagLinha)
     }
     else if (n < 0)
     {
-        printf("Erro: O numero da linha é menor do que 0\n");
+        error(3);
     }
     else if (n > lista->numElem)
     {
-        printf("Erro: O numero da linha é maior do que o número de elementos na string \n");
+        error(4);
     }
     else
     {
@@ -322,7 +313,7 @@ void copiarStringDadoIndice(int indiceInicio, int indiceFim, char *destino, char
     }
     else
     {
-        printf("Erro String invalida\n");
+        error(5);
     }
 }
 
@@ -491,12 +482,12 @@ int removerMN(TDLEnc *lista, int n, int m)
         }
         else
         {
-            printf("Verifique os parametros\n");
+            error(6);
         }
     }
     else
     {
-        printf("Erro:Impossivel remover, a lista esta Vazia\n");
+        error(1);
     }
 }
 
@@ -520,7 +511,7 @@ void pegarSubstring(char *string, int pos, char *subString)
     }
     else
     {
-        printf("Erro: Sintaxe do comando $localizar invalida \n");
+        error(7);
     }
 }
 
@@ -578,7 +569,7 @@ int localizarString(TDLEnc *lista, char *subs)
     }
     else
     {
-        printf("Erro: Impossível localizar '%s' , a lista está vazia\n", subs);
+        error(1);
     }
 }
 
@@ -605,7 +596,7 @@ void pegarStringsEmAlterar(char *string, char *subString1, char *subString2)
     {
         if (posDelimitador2 == posDelimitador3)
         {
-            printf("Sintaxe do comando alterar errada!\n");
+            error(7);
         }
         else
         {
@@ -634,7 +625,7 @@ void pegarStringsEmAlterar(char *string, char *subString1, char *subString2)
     }
     else
     {
-        printf("Sintaxe do comando alterar errada!\n");
+       error(7);
     }
 }
 
@@ -671,13 +662,13 @@ void alterarString(TDLEnc *lista, char *subString1, char *subString2)
     TAtomo *paux = buscarAtomoCorrente(lista);
     if (paux == NULL)
     {
-        printf("Impossivel alterar,nao existe uma linha corrente \n");
+        error(8);
     }
     else
     {
         if (*subString1 == '\0' && *subString2 == '\0')
         {
-            printf("Erro: Sintaxe do comando errada\n");
+            error(7);
         }
         else
         {
@@ -739,7 +730,7 @@ void alterarString(TDLEnc *lista, char *subString1, char *subString2)
             }
             else
             {
-                printf("\nPalavra nao encontrada\n");
+                warning(1);
             }
         }
     }
@@ -760,7 +751,7 @@ TAtomo *pegarAtomoDadaChave(TDLEnc *lista, int numLinha)
         return NULL;
     }
     else{
-        printf("Nao e possivel mostrar, a lista esta vazia\n");
+        error(1);
     }
 }
 
@@ -769,7 +760,7 @@ void mostrarDeFormaInversa(TDLEnc *lista, int m, int n)
     TAtomo *plinha = pegarAtomoDadaChave(lista,m);
     if(plinha == NULL)
     {
-        printf("Nao existe nenhuma linha com esse numero\n");
+         error(9);
     }
     else
     {
@@ -794,7 +785,7 @@ void mostrarDeFormaInversa(TDLEnc *lista, int m, int n)
         }
         else
         {
-            printf("N ou M estao com numeros invalidos\n");
+             error(10);
         }
  
    }
