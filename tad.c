@@ -730,7 +730,7 @@ void alterarString(TDLEnc *lista, char *subString1, char *subString2)
             }
             else
             {
-                warning(1);
+                warning(0);
             }
         }
     }
