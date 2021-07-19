@@ -244,4 +244,5 @@ void pegarPosicaoString(TAtomo *paux, char subs[], int *posInicial, int *posFina
 void alterarString(TDLEnc *lista, char subString1[], char subString2[]);
 
 
+void mostrarDeFormaInversa(TDLEnc *lista, int m, int n);
 #endif // RACIONAL_H_INCLUDED

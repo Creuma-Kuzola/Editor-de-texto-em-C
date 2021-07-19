@@ -68,6 +68,12 @@ int main (){
         if(num == 8){
             break;
         } 
+        if(num == 9)
+        {
+            
+            pegarNM(string,indiceInicio,&n,&m);
+            mostrarDeFormaInversa(&lista,n,m);
+        }
       
         if(flagInsercao == 1){
 
