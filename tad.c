@@ -87,7 +87,7 @@ void error(int errorCode)
 void warning(int warningCode)
 {
     char *warningsMessages[] = {
-        "Aviso: PALAVRA NÃO ENCONTRADA"
+        "Aviso: Palavra nao encontrada"
         };
 
     printf("\n%s\n", warningsMessages[warningCode]);
@@ -363,7 +363,7 @@ void pegarN(int indiceInicio, int indiceFim, char *destino, char *origem, int *n
     int k = 0;
     for (int i = indiceInicio; i <= indiceFim + 1; i++)
     {
-        if (isdigit(*(origem+i)))
+        if (isdigit(*(origem+i)) && *(origem+i) !=  ' ')
         {
             *(destino+k) = *(origem+indiceInicio);
             k++;
@@ -379,7 +379,7 @@ void pegarM(int indiceInicio, int indiceFim, char *destino, char *origem, int *m
     int k = 0;
     for (int i = indiceInicio; i <= indiceFim - 1; i++)
     {
-        if (isdigit(*(origem+i)))
+        if (isdigit(*(origem+i)) && *(origem+i) != ' ')
         {
             *(destino+k) = *(origem+indiceInicio);
             k++;
@@ -395,12 +395,10 @@ void pegarNM(char *st, int indiceInicio, int *n, int *m)
     char *inst = (char*)(malloc(sizeof(char) * 15));
     char *numNInicio = (char*)(malloc(sizeof(char) * 10));
     char *numMFim = (char*)(malloc(sizeof(char) * 10));
-
     int i;
 
     for (i = indiceInicio; *(st+i) != '\0'; i++)
     {
-
         if (*(st+i) == ',')
         {
             pegarN(indiceInicio, i, numNInicio, st, n);
@@ -437,7 +435,8 @@ void pegarInstrucao(char *st, char *inst, int *pos)
                     *(inst+k) = *(st+j);
                     k++;
                 }
-                if (isalpha(*(st+j)))
+
+                if (isalpha(*(st+j)) && *(st+j) != ' ')
                 {
                     if (toupper(*(st+j)))
                     {
@@ -457,7 +456,6 @@ void pegarInstrucao(char *st, char *inst, int *pos)
             {
                 *pos = i + 1;
             }
-
             break;
         }
     }
@@ -491,11 +489,7 @@ int removerMN(TDLEnc *lista, int n, int m)
                     if (pdel == lista->primeiro)
                     {
                         lista->primeiro = pdel->seguinte;
-                        TAtomo *paux = pdel->seguinte;
-                        for(; paux != NULL; paux = paux->seguinte)
-                        {
-                            paux->info.numLinha = paux->info.numLinha - 1;
-                        }
+                       
                     }
                     else if (pdel == lista->ultimo)
                     {
@@ -511,9 +505,6 @@ int removerMN(TDLEnc *lista, int n, int m)
                         }
                         pdel->anterior->seguinte = pdel->seguinte;
                         pdel->seguinte->anterior = pdel->anterior;
-
-                     
-
                     }
                     if (pdel->info.linhaCorrente == TRUE && pdel != lista->primeiro)
                     {

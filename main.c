@@ -66,12 +66,12 @@ int main (){
         if(num == 8){
             break;
         } 
+        
         if(num == 9)
         {
             pegarNM(string,indiceInicio,&n,&m);
             mostrarDeFormaInversa(&lista,n,m);
         }
-
         if(num == 10)
         {
             memset(subString,'\0',20);
@@ -79,7 +79,6 @@ int main (){
             adicionarPilhaUndo(lista, pilha, &cabecaPilha);
             deletarString(&lista,subString);
         }
-
         if(num == 11)
         {
             opearacaoUndo(&lista, pilha, &cabecaPilha);
