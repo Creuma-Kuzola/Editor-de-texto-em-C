@@ -480,7 +480,7 @@ int removerMN(TDLEnc *lista, int n, int m)
     TAtomo *pdel;
     if (lista->primeiro != NULL && lista->ultimo != NULL)
     {
-        if (n >= 1 && m > n)
+        if (n >= 1 && m >= n)
         {
             for (int i = n; i <= m; i++)
             {
@@ -491,6 +491,11 @@ int removerMN(TDLEnc *lista, int n, int m)
                     if (pdel == lista->primeiro)
                     {
                         lista->primeiro = pdel->seguinte;
+                        TAtomo *paux = pdel->seguinte;
+                        for(; paux != NULL; paux = paux->seguinte)
+                        {
+                            paux->info.numLinha = paux->info.numLinha - 1;
+                        }
                     }
                     else if (pdel == lista->ultimo)
                     {
@@ -499,8 +504,16 @@ int removerMN(TDLEnc *lista, int n, int m)
                     }
                     else
                     {
+                        TAtomo *paux = pdel->seguinte;
+                        for(; paux != NULL; paux = paux->seguinte)
+                        {
+                            paux->info.numLinha = paux->info.numLinha - 1;
+                        }
                         pdel->anterior->seguinte = pdel->seguinte;
                         pdel->seguinte->anterior = pdel->anterior;
+
+                     
+
                     }
                     if (pdel->info.linhaCorrente == TRUE && pdel != lista->primeiro)
                     {
@@ -742,7 +755,6 @@ void alterarString(TDLEnc *lista, char *subString1, char *subString2)
         }
         else
         {
-
             char *texto = (char*)(malloc(sizeof(char)*MAX));;
             int posInicial = 0, posFinal = 0, j = 0, i = 0, k = 0, flagParagem = 0, f = 0;
             int tamString = strlen(paux->info.frase), tamString2 = 0;
@@ -825,10 +837,9 @@ void deletarString(TDLEnc *lista, char *subString1)
         }
         else
         {
-
-            char *texto = (char*)(malloc(sizeof(char)*MAX));;
+            char *texto = (char*)(malloc(sizeof(char)*MAX));
             int posInicial = 0, posFinal = 0, j = 0, i = 0, k = 0, flagParagem = 0, f = 0;
-            int tamString = strlen(paux->info.frase), tamString2 = 0;
+            int tamString = strlen(paux->info.frase), tamString2 = 0, flagFinal = 0;
 
             pegarPosicaoString(paux, subString1, &posInicial, &posFinal);
 
@@ -854,6 +865,7 @@ void deletarString(TDLEnc *lista, char *subString1)
                             *(texto+k) = *(subString2+j);
                             k++;
                         }
+                        
                     }
                     else
                     {
@@ -862,6 +874,7 @@ void deletarString(TDLEnc *lista, char *subString1)
                             *(texto+k) = *(paux->info.frase+c);
                             k++;
                         }
+
                         *(texto+k) = '\0';
                         flagParagem = 1;
                         break;
@@ -873,13 +886,14 @@ void deletarString(TDLEnc *lista, char *subString1)
                         posInicial = posFinal;
                     }
                 }
-
+               
                 tamString2 = strlen(texto);
                 for (f = 0; f < tamString2; f++)
                 {
                     *(paux->info.frase+f) = *(texto+f);
                 }
                 *(paux->info.frase+f) = '\0';
+                removerMN(lista,paux->info.numLinha, paux->info.numLinha);
             }
             else
             {
