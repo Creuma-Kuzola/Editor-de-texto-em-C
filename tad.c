@@ -46,17 +46,17 @@ int numInstrucao(char *instrucao)
             return 8;
         }
 
-        if(strcmp(instrucao, "$prnenv") == 0)
-        {   
+        if (strcmp(instrucao, "$prnenv") == 0)
+        {
             return 9;
         }
-        if(strcmp(instrucao, "$deletar") == 0)
-        {   
+        if (strcmp(instrucao, "$deletar") == 0)
+        {
             return 10;
         }
 
-        if(strcmp(instrucao, "$undo") == 0)
-        {   
+        if (strcmp(instrucao, "$undo") == 0)
+        {
             return 11;
         }
 
@@ -78,8 +78,7 @@ void error(int errorCode)
         "Erro: Sintaxe do comando errada",
         "Erro: Nao existe uma linha corrente",
         "Erro: Nao existe nenhuma linha com esse numero",
-        "Erro: N ou M estao com numeros invalidos"
-    };
+        "Erro: N ou M estao com numeros invalidos"};
 
     printf("\n%s\n", errorMessages[errorCode]);
 }
@@ -87,8 +86,7 @@ void error(int errorCode)
 void warning(int warningCode)
 {
     char *warningsMessages[] = {
-        "Aviso: PALAVRA NÃO ENCONTRADA"
-        };
+        "Aviso: PALAVRA NÃO ENCONTRADA"};
 
     printf("\n%s\n", warningsMessages[warningCode]);
 }
@@ -135,26 +133,26 @@ void imprimirLinhaMAteN(TDLEnc *lista, int m, int n)
     {
         if (m >= 1 && n <= lista->ultimo->info.numLinha)
         {
-                printf("--------------------------------------------------------------\n");
-                TAtomo *actual = lista -> primeiro;
-                int i = 0;
-                int contador = 0;
+            printf("--------------------------------------------------------------\n");
+            TAtomo *actual = lista->primeiro;
+            int i = 0;
+            int contador = 0;
 
-                for (TAtomo *paux = lista->primeiro; paux != NULL; paux = paux->seguinte)
+            for (TAtomo *paux = lista->primeiro; paux != NULL; paux = paux->seguinte)
+            {
+                if (paux->info.numLinha >= m && paux->info.numLinha <= n)
                 {
-                    if (paux->info.numLinha >= m && paux->info.numLinha <= n)
+                    if (paux->info.linhaCorrente == TRUE)
                     {
-                        if(paux->info.linhaCorrente == TRUE)
-                        {
-                            printf("\n\r%d → %s", paux->info.numLinha, paux->info.frase);
-                        }
-                        else{
-                            printf("%d %s\n", paux->info.numLinha, paux->info.frase);
-                        }
+                        printf("\n\r%d → %s", paux->info.numLinha, paux->info.frase);
+                    }
+                    else
+                    {
+                        printf("%d %s\n", paux->info.numLinha, paux->info.frase);
                     }
                 }
-                printf("\n--------------------------------------------------------------\n");
-
+            }
+            printf("\n--------------------------------------------------------------\n");
         }
         else if (m < 1)
         {
@@ -248,13 +246,14 @@ int inserirElemento(TDLEnc *lista, char *st, int flagLinha)
     return OK;
 }
 
-int adicionarPilhaUndo(TDLEnc lista, TInfo *pilha, int *cabecaPilha) 
+int adicionarPilhaUndo(TDLEnc lista, TInfo *pilha, int *cabecaPilha)
 {
-    TInfo actualTInfo =  buscarAtomoCorrente(&lista) -> info;
+    TInfo actualTInfo = buscarAtomoCorrente(&lista)->info;
     TInfo auxTInfo;
 
-    for (int i = 0; *(actualTInfo.frase + i) != '\0'; i++) {
-        *(auxTInfo.frase + i)  = *(actualTInfo.frase + i);
+    for (int i = 0; *(actualTInfo.frase + i) != '\0'; i++)
+    {
+        *(auxTInfo.frase + i) = *(actualTInfo.frase + i);
     }
 
     auxTInfo.numLinha = actualTInfo.numLinha;
@@ -268,30 +267,32 @@ int adicionarPilhaUndo(TDLEnc lista, TInfo *pilha, int *cabecaPilha)
 
 int opearacaoUndo(TDLEnc *lista, TInfo *pilha, int *cabecaPilha)
 {
-    if (*cabecaPilha <= 0) {
+    if (*cabecaPilha <= 0)
+    {
         return EXIT_FAILURE;
     }
-    buscarAtomoCorrente(lista) -> info = *(pilha + *cabecaPilha - 1);
+    buscarAtomoCorrente(lista)->info = *(pilha + *cabecaPilha - 1);
     *cabecaPilha -= 1;
     return OK;
 }
 
-int copiarListaParaAux(TDLEnc *auxLista, TDLEnc lista) {
+int copiarListaParaAux(TDLEnc *auxLista, TDLEnc lista)
+{
     return OK;
 }
 
 int ehCaracterValido(char *st)
 {
-    for (int i = 0; *(st+i)!= '\0'; i++)
+    for (int i = 0; *(st + i) != '\0'; i++)
     {
-        if (!isalpha(*(st+i)))
+        if (!isalpha(*(st + i)))
         {
-            if (*(st+i) == '$')
+            if (*(st + i) == '$')
             {
                 return POSSIBLE_INSTRUTION;
             }
-        
-            if (*(st+i) != ' ' && *(st+i) != '-' && *(st+i) != '.' && *(st+i) != ',' && *(st+i) != ';' && *(st+i) != ':' && *(st+i) != '+')
+
+            if (*(st + i) != ' ' && *(st + i) != '-' && *(st + i) != '.' && *(st + i) != ',' && *(st + i) != ';' && *(st + i) != ':' && *(st + i) != '+')
             {
                 return ERROR;
             }
@@ -343,14 +344,14 @@ void copiarStringDadoIndice(int indiceInicio, int indiceFim, char *destino, char
         indiceInicio++;
         while (indiceInicio <= indiceFim)
         {
-            if (isalpha(*(origem+indiceInicio)))
+            if (isalpha(*(origem + indiceInicio)))
             {
-                *(destino+k) = *(origem+indiceInicio);
+                *(destino + k) = *(origem + indiceInicio);
             }
             k++;
             indiceInicio++;
         }
-        *(destino+k) = '\0';
+        *(destino + k) = '\0';
     }
     else
     {
@@ -363,14 +364,14 @@ void pegarN(int indiceInicio, int indiceFim, char *destino, char *origem, int *n
     int k = 0;
     for (int i = indiceInicio; i <= indiceFim + 1; i++)
     {
-        if (isdigit(*(origem+i)))
+        if (isdigit(*(origem + i)))
         {
-            *(destino+k) = *(origem+indiceInicio);
+            *(destino + k) = *(origem + indiceInicio);
             k++;
             indiceInicio++;
         }
     }
-    *(destino+k) = '\0';
+    *(destino + k) = '\0';
     *n = atoi(destino);
 }
 
@@ -379,29 +380,29 @@ void pegarM(int indiceInicio, int indiceFim, char *destino, char *origem, int *m
     int k = 0;
     for (int i = indiceInicio; i <= indiceFim - 1; i++)
     {
-        if (isdigit(*(origem+i)))
+        if (isdigit(*(origem + i)))
         {
-            *(destino+k) = *(origem+indiceInicio);
+            *(destino + k) = *(origem + indiceInicio);
             k++;
             indiceInicio++;
         }
     }
-    *(destino+k) = '\0';
+    *(destino + k) = '\0';
     *m = atoi(destino);
 }
 
 void pegarNM(char *st, int indiceInicio, int *n, int *m)
 {
-    char *inst = (char*)(malloc(sizeof(char) * 15));
-    char *numNInicio = (char*)(malloc(sizeof(char) * 10));
-    char *numMFim = (char*)(malloc(sizeof(char) * 10));
+    char *inst = (char *)(malloc(sizeof(char) * 15));
+    char *numNInicio = (char *)(malloc(sizeof(char) * 10));
+    char *numMFim = (char *)(malloc(sizeof(char) * 10));
 
     int i;
 
-    for (i = indiceInicio; *(st+i) != '\0'; i++)
+    for (i = indiceInicio; *(st + i) != '\0'; i++)
     {
 
-        if (*(st+i) == ',')
+        if (*(st + i) == ',')
         {
             pegarN(indiceInicio, i, numNInicio, st, n);
             indiceInicio = i;
@@ -412,12 +413,13 @@ void pegarNM(char *st, int indiceInicio, int *n, int *m)
 
 void pegarMLinha(char *st, int indiceInicio, int *m)
 {
-    char *inst = (char*)(malloc(sizeof(char) * 15));
-    char *numNInicio = (char*)(malloc(sizeof(char) * 10));
-    char *numMFim = (char*)(malloc(sizeof(char) * 10));
+    char *inst = (char *)(malloc(sizeof(char) * 15));
+    char *numNInicio = (char *)(malloc(sizeof(char) * 10));
+    char *numMFim = (char *)(malloc(sizeof(char) * 10));
     int i;
 
-    for (i = indiceInicio; *(st+i) != '\0'; i++);
+    for (i = indiceInicio; *(st + i) != '\0'; i++)
+        ;
     pegarM(indiceInicio + 1, i, numMFim, st, m);
 }
 
@@ -425,35 +427,35 @@ void pegarInstrucao(char *st, char *inst, int *pos)
 {
     int i;
     int k = 0;
-    for (i = 0; *(st+i) != '\0'; i++)
+    for (i = 0; *(st + i) != '\0'; i++)
     {
-        if (isalpha(*(st+i)) && *(st+i+1) == '\0' || isalpha(*(st+i)) && *(st+i+1) == ' ')
+        if (isalpha(*(st + i)) && *(st + i + 1) == '\0' || isalpha(*(st + i)) && *(st + i + 1) == ' ')
         {
             int j = 0;
             for (; j <= i; j++)
             {
-                if (j == 0 && *(st+j) == '$')
+                if (j == 0 && *(st + j) == '$')
                 {
-                    *(inst+k) = *(st+j);
+                    *(inst + k) = *(st + j);
                     k++;
                 }
-                if (isalpha(*(st+j)))
+                if (isalpha(*(st + j)))
                 {
-                    if (toupper(*(st+j)))
+                    if (toupper(*(st + j)))
                     {
-                        *(inst+k) = tolower(*(st+j));
+                        *(inst + k) = tolower(*(st + j));
                         k++;
                     }
                     else
                     {
-                        *(inst+k) = *(st+j);
+                        *(inst + k) = *(st + j);
                         k++;
                     }
                 }
             }
-            *(inst+k) = '\0';
+            *(inst + k) = '\0';
             *pos = i;
-            if (isalpha(*(st+i)) && *(st+i+1) == ' ')
+            if (isalpha(*(st + i)) && *(st + i + 1) == ' ')
             {
                 *pos = i + 1;
             }
@@ -477,91 +479,108 @@ TAtomo *buscarAtomoDadaChave(TDLEnc *lista, int chave)
 
 int removerMN(TDLEnc *lista, int n, int m)
 {
-    TAtomo *pdel;
-    if (lista->primeiro != NULL && lista->ultimo != NULL)
+    int printStart = n;
+    int printEnd = m;
+
+    if (printStart > lista->numElem || printEnd > lista->numElem)
     {
-        if (n >= 1 && m >= n)
-        {
-            for (int i = n; i <= m; i++)
-            {
-                pdel = buscarAtomoDadaChave(lista, i);
-
-                if (pdel != NULL)
-                {
-                    if (pdel == lista->primeiro)
-                    {
-                        lista->primeiro = pdel->seguinte;
-                        TAtomo *paux = pdel->seguinte;
-                        for(; paux != NULL; paux = paux->seguinte)
-                        {
-                            paux->info.numLinha = paux->info.numLinha - 1;
-                        }
-                    }
-                    else if (pdel == lista->ultimo)
-                    {
-                        pdel->anterior->seguinte = NULL;
-                        lista->ultimo = pdel->anterior;
-                    }
-                    else
-                    {
-                        TAtomo *paux = pdel->seguinte;
-                        for(; paux != NULL; paux = paux->seguinte)
-                        {
-                            paux->info.numLinha = paux->info.numLinha - 1;
-                        }
-                        pdel->anterior->seguinte = pdel->seguinte;
-                        pdel->seguinte->anterior = pdel->anterior;
-
-                     
-
-                    }
-                    if (pdel->info.linhaCorrente == TRUE && pdel != lista->primeiro)
-                    {
-                        pdel->anterior->info.linhaCorrente = TRUE;
-                    }
-
-                    if (lista->numElem == 1)
-                    {
-                        free(pdel);
-                        criarLista(lista);
-                        break;
-                    }
-                    else
-                    {
-                        free(pdel);
-                        lista->numElem--;
-                    }
-                }
-            }
-        }
-        else
-        {
-            error(6);
-        }
+        printf("\nERRO: Linhas fora do número actual de linhas no editor de texto: %d\n", lista->numElem);
+    }
+    else if (printStart > printEnd)
+    {
+        error(2);
     }
     else
     {
-        error(1);
+        TAtomo *linhaActual = lista->primeiro;
+        TAtomo *trashRow = NULL;
+
+        while (linhaActual != NULL && linhaActual->info.numLinha != printStart)
+        {
+            linhaActual = linhaActual->seguinte;
+        }
+
+        int previousLineOfTheStartLineOfDeletion = printStart - 1;
+
+
+        while (printStart <= printEnd)
+        {
+            if (previousLineOfTheStartLineOfDeletion == 0)
+            {
+                lista->primeiro = lista->primeiro->seguinte;
+
+                if (lista->primeiro != NULL)
+                {
+                    lista->primeiro->anterior = NULL;
+                }
+                else
+                {
+                    lista->ultimo = NULL;
+                }
+            }
+            else
+            {
+                linhaActual->anterior->seguinte = linhaActual->seguinte;
+
+                if (linhaActual->seguinte == NULL)
+                {
+                    lista->ultimo = linhaActual->anterior;
+                    lista->ultimo = NULL;
+                }
+                else
+                {
+                    linhaActual->seguinte->anterior = linhaActual->anterior;
+                }
+            }
+
+            if (linhaActual != NULL)
+            {
+                linhaActual = linhaActual->seguinte;
+            }
+            printStart++;
+        }
+
+        if (previousLineOfTheStartLineOfDeletion == 0)
+        {
+        }
+        else
+        {
+            linhaActual = lista->primeiro;
+
+            while (linhaActual != NULL && linhaActual->info.numLinha < previousLineOfTheStartLineOfDeletion)
+            {
+                linhaActual = linhaActual->seguinte;
+            }
+        }
+    }
+
+    TAtomo *linhaActual = lista->primeiro;
+
+    if (linhaActual != NULL) {
+        for (int i = 0; linhaActual != NULL; linhaActual = linhaActual -> seguinte) {
+            linhaActual -> info.numLinha = i + 1;
+            i++;
+        }
     }
 }
 
 void pegarSubstring(char *string, int pos, char *subString)
 {
     int i, j, k = 0;
-    for (i = pos; *(string+i) != '\0'; i++)
+    for (i = pos; *(string + i) != '\0'; i++)
     {
-        if (isalpha(*(string+i)) && *(string+i-1) == '%')
+        if (isalpha(*(string + i)) && *(string + i - 1) == '%')
             break;
     }
 
-    if (*(string+i) != '\0')
+    if (*(string + i) != '\0')
     {
-        for (j = i; *(string+j)!= '%'; j++)
+        for (j = i; *(string + j) != '%'; j++)
         {
-            *(subString+k) = *(string+j);
+            *(subString + k) = *(string + j);
             k++;
         }
-        *(subString+j) = '\0';
+        *(subString + j) = '\0';
     }
     else
     {
@@ -629,9 +648,9 @@ int localizarString(TDLEnc *lista, char *subs)
 
 int encontrardelimitador(char *frase, int pos)
 {
-    for (int i = pos; *(frase+i) != '\0'; i++)
+    for (int i = pos; *(frase + i) != '\0'; i++)
     {
-        if (*(frase+i) == '%')
+        if (*(frase + i) == '%')
         {
             return i;
         }
@@ -656,30 +675,30 @@ void pegarStringsEmAlterar(char *string, char *subString1, char *subString2)
         {
             for (; i < posDelimitador2; i++)
             {
-                if (isalpha(*(string+i)))
+                if (isalpha(*(string + i)))
                 {
-                    *(subString1+k) = *(string+i);
+                    *(subString1 + k) = *(string + i);
                     k++;
                 }
             }
-            *(subString1+k) = '\0';
+            *(subString1 + k) = '\0';
             k = 0;
 
             i = posDelimitador2 + 1;
             for (; i < posDelimitador3; i++)
             {
-                if (isalpha(*(string+i)))
+                if (isalpha(*(string + i)))
                 {
-                    *(subString2+k) = *(string+i);
+                    *(subString2 + k) = *(string + i);
                     k++;
                 }
             }
-            *(subString2+k) = '\0';
+            *(subString2 + k) = '\0';
         }
     }
     else
     {
-       error(7);
+        error(7);
     }
 }
 
@@ -699,16 +718,15 @@ void pegarStringsEmDeletar(char *string, char *subString1)
         {
             for (; i < posDelimitador2; i++)
             {
-                *(subString1+k) = *(string+i);
+                *(subString1 + k) = *(string + i);
                 k++;
-            
             }
-            *(subString1+k) = '\0';
+            *(subString1 + k) = '\0';
         }
     }
     else
     {
-       error(7);
+        error(7);
     }
 }
 
@@ -755,7 +773,8 @@ void alterarString(TDLEnc *lista, char *subString1, char *subString2)
         }
         else
         {
-            char *texto = (char*)(malloc(sizeof(char)*MAX));;
+            char *texto = (char *)(malloc(sizeof(char) * MAX));
+            ;
             int posInicial = 0, posFinal = 0, j = 0, i = 0, k = 0, flagParagem = 0, f = 0;
             int tamString = strlen(paux->info.frase), tamString2 = 0;
 
@@ -774,13 +793,13 @@ void alterarString(TDLEnc *lista, char *subString1, char *subString2)
                     {
                         for (; i < posInicial; i++)
                         {
-                            *(texto+k) = *(paux->info.frase + i);
+                            *(texto + k) = *(paux->info.frase + i);
                             k++;
                         }
 
                         for (j = 0; j < strlen(subString2); j++)
                         {
-                            *(texto+k) = *(subString2+j);
+                            *(texto + k) = *(subString2 + j);
                             k++;
                         }
                     }
@@ -788,10 +807,10 @@ void alterarString(TDLEnc *lista, char *subString1, char *subString2)
                     {
                         for (int c = posInicial; c < tamString; c++)
                         {
-                            *(texto+k) = *(paux->info.frase+c);
+                            *(texto + k) = *(paux->info.frase + c);
                             k++;
                         }
-                        *(texto+k) = '\0';
+                        *(texto + k) = '\0';
                         flagParagem = 1;
                         break;
                     }
@@ -806,9 +825,9 @@ void alterarString(TDLEnc *lista, char *subString1, char *subString2)
                 tamString2 = strlen(texto);
                 for (f = 0; f < tamString2; f++)
                 {
-                    *(paux->info.frase+f) = *(texto+f);
+                    *(paux->info.frase + f) = *(texto + f);
                 }
-                *(paux->info.frase+f) = '\0';
+                *(paux->info.frase + f) = '\0';
             }
             else
             {
@@ -817,7 +836,6 @@ void alterarString(TDLEnc *lista, char *subString1, char *subString2)
         }
     }
 }
-
 
 void deletarString(TDLEnc *lista, char *subString1)
 {
@@ -825,79 +843,111 @@ void deletarString(TDLEnc *lista, char *subString1)
     *(subString2) = '\0';
 
     TAtomo *paux = buscarAtomoCorrente(lista);
+
     if (paux == NULL)
     {
         error(8);
     }
     else
     {
-        if (*subString1 == '\0' && *subString2 == '\0')
+        if (strcmp(paux->info.frase, subString1) == 0)
         {
-            error(7);
+            if (paux->info.numLinha == 1) {
+                lista -> primeiro = lista -> primeiro -> seguinte;
+
+                if (lista -> primeiro != NULL) {
+                    lista -> primeiro -> anterior = NULL;
+                    lista -> numElem -= 1;
+                } else {
+                    lista -> ultimo = NULL;
+                    lista -> numElem = 0;
+                }
+            } else {
+                paux -> seguinte -> anterior = paux -> anterior;
+                paux -> anterior -> seguinte = paux -> seguinte;
+
+                TAtomo *linhaActual = lista->primeiro;
+                lista -> numElem -= 1;
+            }
+            if (lista -> numElem != 0) {
+                TAtomo *linhaActual = lista->primeiro;
+
+                if (linhaActual != NULL) {
+                    for (int i = 0; linhaActual != NULL; linhaActual = linhaActual -> seguinte) {
+                        linhaActual -> info.numLinha = i + 1;
+                        i++;
+                    }
+                }
+            }
         }
         else
         {
-            char *texto = (char*)(malloc(sizeof(char)*MAX));
-            int posInicial = 0, posFinal = 0, j = 0, i = 0, k = 0, flagParagem = 0, f = 0;
-            int tamString = strlen(paux->info.frase), tamString2 = 0, flagFinal = 0;
-
-            pegarPosicaoString(paux, subString1, &posInicial, &posFinal);
-
-            if (posInicial != posFinal)
+            if (*subString1 == '\0' && *subString2 == '\0')
             {
-                posInicial = 0;
-                posFinal = 0;
-
-                while (flagParagem == 0)
-                {
-                    pegarPosicaoString(paux, subString1, &posInicial, &posFinal);
-
-                    if (posInicial != posFinal)
-                    {
-                        for (; i < posInicial; i++)
-                        {
-                            *(texto+k) = *(paux->info.frase + i);
-                            k++;
-                        }
-
-                        for (j = 0; j < strlen(subString2); j++)
-                        {
-                            *(texto+k) = *(subString2+j);
-                            k++;
-                        }
-                        
-                    }
-                    else
-                    {
-                        for (int c = posInicial; c < tamString; c++)
-                        {
-                            *(texto+k) = *(paux->info.frase+c);
-                            k++;
-                        }
-
-                        *(texto+k) = '\0';
-                        flagParagem = 1;
-                        break;
-                    }
-
-                    if (posInicial != posFinal)
-                    {
-                        i = posFinal;
-                        posInicial = posFinal;
-                    }
-                }
-               
-                tamString2 = strlen(texto);
-                for (f = 0; f < tamString2; f++)
-                {
-                    *(paux->info.frase+f) = *(texto+f);
-                }
-                *(paux->info.frase+f) = '\0';
-                removerMN(lista,paux->info.numLinha, paux->info.numLinha);
+                error(7);
             }
             else
             {
-                warning(0);
+                char *texto = (char *)(malloc(sizeof(char) * MAX));
+                int posInicial = 0, posFinal = 0, j = 0, i = 0, k = 0, flagParagem = 0, f = 0;
+                int tamString = strlen(paux->info.frase), tamString2 = 0, flagFinal = 0;
+
+                pegarPosicaoString(paux, subString1, &posInicial, &posFinal);
+
+                if (posInicial != posFinal)
+                {
+                    posInicial = 0;
+                    posFinal = 0;
+
+                    while (flagParagem == 0)
+                    {
+                        pegarPosicaoString(paux, subString1, &posInicial, &posFinal);
+
+                        if (posInicial != posFinal)
+                        {
+                            for (; i < posInicial; i++)
+                            {
+                                *(texto + k) = *(paux->info.frase + i);
+                                k++;
+                            }
+
+                            for (j = 0; j < strlen(subString2); j++)
+                            {
+                                *(texto + k) = *(subString2 + j);
+                                k++;
+                            }
+                        }
+                        else
+                        {
+                            for (int c = posInicial; c < tamString; c++)
+                            {
+                                *(texto + k) = *(paux->info.frase + c);
+                                k++;
+                            }
+
+                            *(texto + k) = '\0';
+                            flagParagem = 1;
+                            break;
+                        }
+
+                        if (posInicial != posFinal)
+                        {
+                            i = posFinal;
+                            posInicial = posFinal;
+                        }
+                    }
+
+                    tamString2 = strlen(texto);
+                    for (f = 0; f < tamString2; f++)
+                    {
+                        *(paux->info.frase + f) = *(texto + f);
+                    }
+                    *(paux->info.frase + f) = '\0';
+                }
+                else
+                {
+                    warning(0);
+                }
             }
         }
     }
@@ -905,45 +955,46 @@ void deletarString(TDLEnc *lista, char *subString1)
 
 TAtomo *pegarAtomoDadaChave(TDLEnc *lista, int numLinha)
 {
-    if(lista->primeiro != NULL && lista->ultimo != NULL)
+    if (lista->primeiro != NULL && lista->ultimo != NULL)
     {
-        for(TAtomo *paux = lista->primeiro; paux != NULL; paux = paux->seguinte)
+        for (TAtomo *paux = lista->primeiro; paux != NULL; paux = paux->seguinte)
         {
-            if(paux->info.numLinha == numLinha)
+            if (paux->info.numLinha == numLinha)
             {
                 return paux;
-            }  
+            }
         }
         return NULL;
     }
-    else{
+    else
+    {
         error(1);
     }
 }
 
 void mostrarDeFormaInversa(TDLEnc *lista, int m, int n)
 {
-    TAtomo *plinha = pegarAtomoDadaChave(lista,m);
-    if(plinha == NULL)
+    TAtomo *plinha = pegarAtomoDadaChave(lista, m);
+    if (plinha == NULL)
     {
-         error(9);
+        error(9);
     }
     else
     {
-       if((m>= 1 && m<= lista->numElem) && (n>=1 && n<=lista->numElem))
-       {
-            if(plinha == lista->primeiro)
+        if ((m >= 1 && m <= lista->numElem) && (n >= 1 && n <= lista->numElem))
+        {
+            if (plinha == lista->primeiro)
             {
-                printf("%d %s \n",plinha->info.numLinha,plinha->info.frase);
+                printf("%d %s \n", plinha->info.numLinha, plinha->info.frase);
             }
             else
             {
                 TAtomo *paux = plinha;
-                int numImpressao=1;
+                int numImpressao = 1;
                 printf("--------------------------------------------------------------\n");
-                for(; plinha != NULL && numImpressao <=n; plinha = plinha->anterior)
+                for (; plinha != NULL && numImpressao <= n; plinha = plinha->anterior)
                 {
-                    printf("%d %s\n",plinha->info.numLinha,plinha->info.frase);
+                    printf("%d %s\n", plinha->info.numLinha, plinha->info.frase);
                     numImpressao++;
                 }
                 printf("--------------------------------------------------------------\n\n");
@@ -953,8 +1004,5 @@ void mostrarDeFormaInversa(TDLEnc *lista, int m, int n)
         {
             error(10);
         }
- 
-   }
-
-    
+    }
 }
