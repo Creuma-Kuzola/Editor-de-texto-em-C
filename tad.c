@@ -5,11 +5,10 @@
 #include "tad.h"
 #include <ctype.h>
 
-int numInstrucao(char instrucao[])
+int numInstrucao(char *instrucao)
 {
-    if (instrucao[0] == '$')
+    if (*(instrucao) == '$')
     {
-
         if (strcmp(instrucao, "$inserir") == 0)
         {
             return 1;
@@ -51,15 +50,51 @@ int numInstrucao(char instrucao[])
         {   
             return 9;
         }
+        if(strcmp(instrucao, "$deletar") == 0)
+        {   
+            return 10;
+        }
+
+        if(strcmp(instrucao, "$undo") == 0)
+        {   
+            return 11;
+        }
 
         return -1;
     }
     return -1;
 }
 
+void error(int errorCode)
+{
+    char *errorMessages[] = {
+        "Erro: A lista esta vazia",
+        "Erro: O M é menor do que 1",
+        "Erro: O N é maior do o que número da última linha",
+        "Erro: O numero da linha é menor do que 0",
+        "Erro: O numero da linha é maior do que o número de elementos na string",
+        "Erro: String invalida",
+        "Erro: Parametros invalidos",
+        "Erro: Sintaxe do comando errada",
+        "Erro: Nao existe uma linha corrente",
+        "Erro: Nao existe nenhuma linha com esse numero",
+        "Erro: N ou M estao com numeros invalidos"
+    };
+
+    printf("\n%s\n", errorMessages[errorCode]);
+}
+
+void warning(int warningCode)
+{
+    char *warningsMessages[] = {
+        "Aviso: PALAVRA NÃO ENCONTRADA"
+        };
+
+    printf("\n%s\n", warningsMessages[warningCode]);
+}
+
 void criarLista(TDLEnc *lista)
 {
-
     lista->primeiro = NULL;
     lista->ultimo = NULL;
     lista->numElem = 0;
@@ -72,7 +107,6 @@ Boolean vaziaLista(TDLEnc *lista)
 
 void imprimirLista(TDLEnc *lista)
 {
-
     if (lista->primeiro != NULL && lista->ultimo != NULL)
     {
         printf("--------------------------------------------------------------\n");
@@ -91,7 +125,7 @@ void imprimirLista(TDLEnc *lista)
     }
     else
     {
-        printf("Erro: Impossivel imprimir, a lista esta vazia\n");
+        error(1);
     }
 }
 
@@ -101,22 +135,6 @@ void imprimirLinhaMAteN(TDLEnc *lista, int m, int n)
     {
         if (m >= 1 && n <= lista->ultimo->info.numLinha)
         {
-            /*
-            Antes de imprimir
-            if (m <= n)
-            {
-
-                printf("--------------------------------------------------------------\n");
-                for (TAtomo *paux = lista->primeiro; paux != NULL; paux = paux->seguinte)
-                {
-                    if (paux->info.numLinha >= m && paux->info.numLinha <= n)
-                    {
-                        printf("%d %s\n", paux->info.numLinha, paux->info.frase);
-                    }
-                }
-                printf("--------------------------------------------------------------\n\n");
-            }*/
-
                 printf("--------------------------------------------------------------\n");
                 TAtomo *actual = lista -> primeiro;
                 int i = 0;
@@ -128,28 +146,28 @@ void imprimirLinhaMAteN(TDLEnc *lista, int m, int n)
                     {
                         if(paux->info.linhaCorrente == TRUE)
                         {
-                            printf("\n\r%d → %s\n", paux->info.numLinha, paux->info.frase);
+                            printf("\n\r%d → %s", paux->info.numLinha, paux->info.frase);
                         }
                         else{
                             printf("%d %s\n", paux->info.numLinha, paux->info.frase);
                         }
                     }
                 }
-                printf("--------------------------------------------------------------\n\n");
+                printf("\n--------------------------------------------------------------\n");
 
         }
         else if (m < 1)
         {
-            printf("Erro: o M é menor do que 1\n");
+            error(1);
         }
         else if (n > lista->ultimo->info.numLinha)
         {
-            printf("Erro: o N é maior do o que número da última linha\n");
+            error(2);
         }
     }
     else
     {
-        printf("Erro:Impossivel imprimir, a lista esta vazia\n");
+        error(1);
     }
 }
 
@@ -161,7 +179,7 @@ void imprimirUltimo(TDLEnc *lista)
     }
     else
     {
-        printf("Erro: Lista Vazia\n");
+        error(1);
     }
 }
 
@@ -177,7 +195,7 @@ TAtomo *buscarAtomoCorrente(TDLEnc *lista)
     return NULL;
 }
 
-int inserirElemento(TDLEnc *lista, char st[], int flagLinha)
+int inserirElemento(TDLEnc *lista, char *st, int flagLinha)
 {
     TAtomo *pnovo = (TAtomo *)malloc(sizeof(TAtomo));
 
@@ -230,16 +248,18 @@ int inserirElemento(TDLEnc *lista, char st[], int flagLinha)
     return OK;
 }
 
-int ehCaracterValido(char st[])
+int ehCaracterValido(char *st)
 {
-    for (int i = 0; st[i] != '\0'; i++)
+    for (int i = 0; *(st+i)!= '\0'; i++)
     {
-        if (!isalpha(st[i]))
+        if (!isalpha(*(st+i)))
         {
-            if (st[i] == '$')
+            if (*(st+i) == '$')
+            {
                 return POSSIBLE_INSTRUTION;
-
-            if (st[i] != ' ' && st[i] != '-' && st[i] != '.' && st[i] != ',' && st[i] != ';' && st[i] != ':' && st[i] != '+')
+            }
+        
+            if (*(st+i) != ' ' && *(st+i) != '-' && *(st+i) != '.' && *(st+i) != ',' && *(st+i) != ';' && *(st+i) != ':' && *(st+i) != '+')
             {
                 return ERROR;
             }
@@ -256,11 +276,11 @@ void linha(TDLEnc *lista, int n, int *flagLinha)
     }
     else if (n < 0)
     {
-        printf("Erro: O numero da linha é menor do que 0\n");
+        error(3);
     }
     else if (n > lista->numElem)
     {
-        printf("Erro: O numero da linha é maior do que o número de elementos na string \n");
+        error(4);
     }
     else
     {
@@ -282,79 +302,74 @@ void linha(TDLEnc *lista, int n, int *flagLinha)
     }
 }
 
-void copiarStringDadoIndice(int indiceInicio, int indiceFim, char destino[], char origem[])
+void copiarStringDadoIndice(int indiceInicio, int indiceFim, char *destino, char *origem)
 {
     int k = 1;
-    printf("%s: origem", origem);
-    if (origem[0] == '$')
+    if (*origem == '$')
     {
-        destino[0] = origem[0];
+        *destino = *origem;
         indiceInicio++;
         while (indiceInicio <= indiceFim)
         {
-            printf("ini: %d  fim:%d", indiceInicio, indiceFim);
-            if (isalpha(origem[indiceInicio]))
+            if (isalpha(*(origem+indiceInicio)))
             {
-                printf("Entrei");
-                destino[k] = origem[indiceInicio];
-                printf("Dentro: k: %d i:%d\n", k, indiceInicio);
-                printf("%c: origem", origem[indiceInicio]);
+                *(destino+k) = *(origem+indiceInicio);
             }
             k++;
             indiceInicio++;
-            printf("Fora: k: %d i:%d\n", k, indiceInicio);
         }
-        destino[k] = '\0';
-        printf("\nstring:%s\n", destino);
+        *(destino+k) = '\0';
     }
     else
     {
-        printf("Bla bla\n");
+        error(5);
     }
 }
 
-void pegarN(int indiceInicio, int indiceFim, char destino[], char origem[], int *n)
+void pegarN(int indiceInicio, int indiceFim, char *destino, char *origem, int *n)
 {
     int k = 0;
     for (int i = indiceInicio; i <= indiceFim + 1; i++)
     {
-        if (isdigit(origem[i]))
+        if (isdigit(*(origem+i)))
         {
-            destino[k] = origem[indiceInicio];
+            *(destino+k) = *(origem+indiceInicio);
             k++;
             indiceInicio++;
         }
     }
-    destino[k] = '\0';
+    *(destino+k) = '\0';
     *n = atoi(destino);
 }
 
-void pegarM(int indiceInicio, int indiceFim, char destino[], char origem[], int *m)
+void pegarM(int indiceInicio, int indiceFim, char *destino, char *origem, int *m)
 {
     int k = 0;
     for (int i = indiceInicio; i <= indiceFim - 1; i++)
     {
-        if (isdigit(origem[i]))
+        if (isdigit(*(origem+i)))
         {
-            destino[k] = origem[indiceInicio];
+            *(destino+k) = *(origem+indiceInicio);
             k++;
             indiceInicio++;
         }
     }
-    destino[k] = '\0';
+    *(destino+k) = '\0';
     *m = atoi(destino);
 }
 
-void pegarNM(char st[], int indiceInicio, int *n, int *m)
+void pegarNM(char *st, int indiceInicio, int *n, int *m)
 {
+    char *inst = (char*)(malloc(sizeof(char) * 15));
+    char *numNInicio = (char*)(malloc(sizeof(char) * 10));
+    char *numMFim = (char*)(malloc(sizeof(char) * 10));
 
-    char inst[15], numNInicio[10], numMFim[10];
     int i;
 
-    for (i = indiceInicio; st[i] != '\0'; i++)
+    for (i = indiceInicio; *(st+i) != '\0'; i++)
     {
 
-        if (st[i] == ',')
+        if (*(st+i) == ',')
         {
             pegarN(indiceInicio, i, numNInicio, st, n);
             indiceInicio = i;
@@ -363,48 +378,50 @@ void pegarNM(char st[], int indiceInicio, int *n, int *m)
     pegarM(indiceInicio + 1, i, numMFim, st, m);
 }
 
-void pegarMLinha(char st[], int indiceInicio, int *m)
+void pegarMLinha(char *st, int indiceInicio, int *m)
 {
-
-    char inst[15], numNInicio[10], numMFim[10];
+    char *inst = (char*)(malloc(sizeof(char) * 15));
+    char *numNInicio = (char*)(malloc(sizeof(char) * 10));
+    char *numMFim = (char*)(malloc(sizeof(char) * 10));
     int i;
 
-    for (i = indiceInicio; st[i] != '\0'; i++)
-        ;
+    for (i = indiceInicio; *(st+i) != '\0'; i++);
     pegarM(indiceInicio + 1, i, numMFim, st, m);
 }
 
-void pegarInstrucao(char st[], char inst[], int *pos)
+void pegarInstrucao(char *st, char *inst, int *pos)
 {
     int i;
     int k = 0;
-    for (i = 0; st[i] != '\0'; i++)
+    for (i = 0; *(st+i) != '\0'; i++)
     {
-        if (isalpha(st[i]) && st[i + 1] == '\0' || isalpha(st[i]) && st[i + 1] == ' ')
+        if (isalpha(*(st+i)) && *(st+i+1) == '\0' || isalpha(*(st+i)) && *(st+i+1) == ' ')
         {
             int j = 0;
             for (; j <= i; j++)
             {
-                if (j == 0 && st[j] == '$')
+                if (j == 0 && *(st+j) == '$')
                 {
-                    inst[k] = st[j];
+                    *(inst+k) = *(st+j);
                     k++;
                 }
-                if (isalpha(st[j]))
+                if (isalpha(*(st+j)))
                 {
-                    if (toupper(st[j]))
+                    if (toupper(*(st+j)))
                     {
-                        inst[k++] = tolower(st[j]);
+                        *(inst+k) = tolower(*(st+j));
+                        k++;
                     }
                     else
                     {
-                        inst[k++] = st[j];
+                        *(inst+k) = *(st+j);
+                        k++;
                     }
                 }
             }
-            inst[k] = '\0';
+            *(inst+k) = '\0';
             *pos = i;
-            if (isalpha(st[i]) && st[i + 1] == ' ')
+            if (isalpha(*(st+i)) && *(st+i+1) == ' ')
             {
                 *pos = i + 1;
             }
@@ -474,39 +491,40 @@ int removerMN(TDLEnc *lista, int n, int m)
         }
         else
         {
-            printf("Verifique os parametros\n");
+            error(6);
         }
     }
     else
     {
-        printf("Erro:Impossivel remover, a lista esta Vazia\n");
+        error(1);
     }
 }
 
-void pegarSubstring(char string[], int pos, char subString[])
+void pegarSubstring(char *string, int pos, char *subString)
 {
     int i, j, k = 0;
-    for (i = pos; string[i] != '\0'; i++)
+    for (i = pos; *(string+i) != '\0'; i++)
     {
-        if (isalpha(string[i]) && string[i - 1] == '%')
+        if (isalpha(*(string+i)) && *(string+i-1) == '%')
             break;
     }
 
-    if (string[i] != '\0')
+    if (*(string+i) != '\0')
     {
-        for (j = i; string[j] != '%'; j++)
+        for (j = i; *(string+j)!= '%'; j++)
         {
-            subString[k++] = string[j];
+            *(subString+k) = *(string+j);
+            k++;
         }
-        subString[j] = '\0';
+        *(subString+j) = '\0';
     }
     else
     {
-        printf("Erro: Sintaxe do comando $localizar invalida \n");
+        error(7);
     }
 }
 
-int localizarString(TDLEnc *lista, char subs[])
+int localizarString(TDLEnc *lista, char *subs)
 {
 
     if (lista->primeiro != NULL && lista->ultimo != NULL)
@@ -516,7 +534,7 @@ int localizarString(TDLEnc *lista, char subs[])
         int i, k = 0, tamStringLocalizada = 0, flagImpressao = 0, vezesAImprimir = 0;
         for (paux = lista->primeiro; paux != NULL; paux = paux->seguinte)
         {
-            for (i = 0; paux->info.frase[i] != '\0'; i++)
+            for (i = 0; *(paux->info.frase + i) != '\0'; i++)
             {
                 k = 0;
                 tamStringLocalizada = 0;
@@ -540,19 +558,19 @@ int localizarString(TDLEnc *lista, char subs[])
                 {
                     if (vezesAImprimir != 0)
                     {
-                        printf("\033[32;1m%c\033[0m", paux->info.frase[i]);
+                        printf("\033[32;1m%c\033[0m", *(paux->info.frase + i));
                         vezesAImprimir--;
                     }
                     else
                     {
-                        printf("%c", paux->info.frase[i]);
+                        printf("%c", *(paux->info.frase + i));
                         flagImpressao = 0;
                         vezesAImprimir = 0;
                     }
                 }
                 else
                 {
-                    printf("%c", paux->info.frase[i]);
+                    printf("%c", *(paux->info.frase + i));
                 }
             }
             printf("\n");
@@ -560,15 +578,15 @@ int localizarString(TDLEnc *lista, char subs[])
     }
     else
     {
-        printf("Erro: Impossível localizar '%s' , a lista está vazia\n", subs);
+        error(1);
     }
 }
 
-int encontrardelimitador(char frase[], int pos)
+int encontrardelimitador(char *frase, int pos)
 {
-    for (int i = pos; frase[i] != '\0'; i++)
+    for (int i = pos; *(frase+i) != '\0'; i++)
     {
-        if (frase[i] == '%')
+        if (*(frase+i) == '%')
         {
             return i;
         }
@@ -576,50 +594,51 @@ int encontrardelimitador(char frase[], int pos)
     return NOT_FOUND;
 }
 
-void pegarStringsEmAlterar(char string[], char subString1[], char subString2[])
+void pegarStringsEmAlterar(char *string, char *subString1, char *subString2)
 {
     int posIni = 0;
     int posDelimitador1 = encontrardelimitador(string, posIni);
     int posDelimitador2 = encontrardelimitador(string, posDelimitador1 + 1);
     int posDelimitador3 = strlen(string) - 1;
     int i = posDelimitador1 + 1, k = 0;
-    printf("pos1: %d, pos2 %d, pos3: %d\n", posDelimitador1, posDelimitador2, posDelimitador3);
     if (posDelimitador1 != -1 && posDelimitador2 != -1 && posDelimitador3 != -1)
     {
         if (posDelimitador2 == posDelimitador3)
         {
-            printf("Sintaxe do comando alterar errada!\n");
+            error(7);
         }
         else
         {
             for (; i < posDelimitador2; i++)
             {
-                if (isalpha(string[i]))
+                if (isalpha(*(string+i)))
                 {
-                    subString1[k++] = string[i];
+                    *(subString1+k) = *(string+i);
+                    k++;
                 }
             }
-            subString1[k] = '\0';
+            *(subString1+k) = '\0';
             k = 0;
 
             i = posDelimitador2 + 1;
             for (; i < posDelimitador3; i++)
             {
-                if (isalpha(string[i]))
+                if (isalpha(*(string+i)))
                 {
-                    subString2[k++] = string[i];
+                    *(subString2+k) = *(string+i);
+                    k++;
                 }
             }
-            subString2[k] = '\0';
+            *(subString2+k) = '\0';
         }
     }
     else
     {
-        printf("Sintaxe do comando alterar errada!\n");
+       error(7);
     }
 }
 
-void pegarPosicaoString(TAtomo *paux, char subs[], int *posInicial, int *posFinal)
+void pegarPosicaoString(TAtomo *paux, char *subs, int *posInicial, int *posFinal)
 {
 
     int i = *posInicial;
@@ -632,7 +651,7 @@ void pegarPosicaoString(TAtomo *paux, char subs[], int *posInicial, int *posFina
         flagFound = 1;
         for (int j = 0; j < sizeSub; j++)
         {
-            if (subs[j] != paux->info.frase[j + i])
+            if (subs[j] != *(paux->info.frase + j + i))
             {
                 flagFound = 0;
                 break;
@@ -647,29 +666,27 @@ void pegarPosicaoString(TAtomo *paux, char subs[], int *posInicial, int *posFina
     }
 }
 
-void alterarString(TDLEnc *lista, char subString1[], char subString2[])
+void alterarString(TDLEnc *lista, char *subString1, char *subString2)
 {
     TAtomo *paux = buscarAtomoCorrente(lista);
     if (paux == NULL)
     {
-        printf("Impossivel alterar,nao existe uma linha corrente \n");
+        error(8);
     }
     else
     {
-        if (subString1[0] == '\0' && subString2[0] == '\0')
+        if (*subString1 == '\0' && *subString2 == '\0')
         {
-            printf("Erro: Sintaxe do comando errada\n");
+            error(7);
         }
         else
         {
 
-            char texto[MAX];
+            char *texto = (char*)(malloc(sizeof(char)*MAX));;
             int posInicial = 0, posFinal = 0, j = 0, i = 0, k = 0, flagParagem = 0, f = 0;
             int tamString = strlen(paux->info.frase), tamString2 = 0;
 
             pegarPosicaoString(paux, subString1, &posInicial, &posFinal);
-
-            //printf("\nposInicial: %d, posFinal: %d\n", posInicial, posFinal);
 
             if (posInicial != posFinal)
             {
@@ -679,27 +696,29 @@ void alterarString(TDLEnc *lista, char subString1[], char subString2[])
                 while (flagParagem == 0)
                 {
                     pegarPosicaoString(paux, subString1, &posInicial, &posFinal);
-                    //printf("\nposInicial: %d, posFinal: %d\n", posInicial, posFinal);
 
                     if (posInicial != posFinal)
                     {
                         for (; i < posInicial; i++)
                         {
-                            texto[k++] = paux->info.frase[i];
+                            *(texto+k) = *(paux->info.frase + i);
+                            k++;
                         }
 
                         for (j = 0; j < strlen(subString2); j++)
                         {
-                            texto[k++] = subString2[j];
+                            *(texto+k) = *(subString2+j);
+                            k++;
                         }
                     }
                     else
                     {
                         for (int c = posInicial; c < tamString; c++)
                         {
-                            texto[k++] = paux->info.frase[c];
+                            *(texto+k) = *(paux->info.frase+c);
+                            k++;
                         }
-                        texto[k] = '\0';
+                        *(texto+k) = '\0';
                         flagParagem = 1;
                         break;
                     }
@@ -714,13 +733,13 @@ void alterarString(TDLEnc *lista, char subString1[], char subString2[])
                 tamString2 = strlen(texto);
                 for (f = 0; f < tamString2; f++)
                 {
-                    paux->info.frase[f] = texto[f];
+                    *(paux->info.frase+f) = *(texto+f);
                 }
-                paux->info.frase[f] = '\0';
+                *(paux->info.frase+f) = '\0';
             }
             else
             {
-                printf("\nPalavra nao encontrada\n");
+                warning(0);
             }
         }
     }
@@ -741,7 +760,7 @@ TAtomo *pegarAtomoDadaChave(TDLEnc *lista, int numLinha)
         return NULL;
     }
     else{
-        printf("Nao e possivel mostrar, a lista esta vazia\n");
+        error(1);
     }
 }
 
@@ -750,7 +769,7 @@ void mostrarDeFormaInversa(TDLEnc *lista, int m, int n)
     TAtomo *plinha = pegarAtomoDadaChave(lista,m);
     if(plinha == NULL)
     {
-        printf("Nao existe nenhuma linha com esse numero\n");
+         error(9);
     }
     else
     {
@@ -775,7 +794,7 @@ void mostrarDeFormaInversa(TDLEnc *lista, int m, int n)
         }
         else
         {
-            printf("N ou M estao com numeros invalidos\n");
+            error(10);
         }
  
    }
