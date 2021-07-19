@@ -9,6 +9,8 @@ int main (){
 
     TInfo info;
     int num = -2;
+    TInfo *pilha = (TInfo *)(malloc(sizeof(TInfo) * MAX));
+    int cabecaPilha = 0; 
     TDLEnc lista;
     char string[MAX];
     char *inst = (char*)(malloc(sizeof(15)));
@@ -72,12 +74,15 @@ int main (){
 
         if(num == 10)
         {
-            
+            memset(subString,'\0',20);
+            pegarStringsEmDeletar(string, subString);
+            adicionarPilhaUndo(lista, pilha, &cabecaPilha);
+            deletarString(&lista,subString);
         }
 
         if(num == 11)
         {
-
+            opearacaoUndo(&lista, pilha, &cabecaPilha);
         }
       
         if(flagInsercao == 1){

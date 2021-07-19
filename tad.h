@@ -225,6 +225,15 @@ int encontrardelimitador(char *frase, int pos);
 */
 void pegarStringsEmAlterar(char *string, char *subString1, char *subString2);
 
+/* 
+  Entrada:indice de inicio, indice fim, a string de destino e a string de origem;
+  Saída:Nada;
+  Pré-Condições:n<0 || n< lista.ultimo.numLinha; 
+  Pós-Condições:Verificar se ja nao ha uma linha corrente, caso haja por essa linha como false e por a linha actual como true;
+*/
+void pegarStringsEmDeletar(char *string, char *subString1);
+
+
 
 /* 
   Entrada:indice de inicio, indice fim, a string de destino e a string de origem;
@@ -243,6 +252,18 @@ void pegarPosicaoString(TAtomo *paux, char *subs, int *posInicial, int *posFinal
 */
 void alterarString(TDLEnc *lista, char *subString1, char *subString2);
 
+/* 
+  Entrada:a lista, a string a procurar e a string a substituir;
+  Saída:Nada;
+  Pré-Condições:n<0 || n< lista.ultimo.numLinha; 
+  Pós-Condições:Verificar se ja nao ha uma linha corrente, caso haja por essa linha como false e por a linha actual como true;
+*/
+void deletarString(TDLEnc *lista, char *subString1);
+
+
+
+int adicionarPilhaUndo(TDLEnc lista, TInfo *pilha, int *cabecaPilha);
+int opearacaoUndo(TDLEnc *lista, TInfo *pilha, int *cabecaPilha);
 
 void mostrarDeFormaInversa(TDLEnc *lista, int m, int n);
 #endif // RACIONAL_H_INCLUDED

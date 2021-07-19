@@ -248,6 +248,38 @@ int inserirElemento(TDLEnc *lista, char *st, int flagLinha)
     return OK;
 }
 
+int adicionarPilhaUndo(TDLEnc lista, TInfo *pilha, int *cabecaPilha) 
+{
+    TInfo actualTInfo =  buscarAtomoCorrente(&lista) -> info;
+    TInfo auxTInfo;
+
+    for (int i = 0; *(actualTInfo.frase + i) != '\0'; i++) {
+        *(auxTInfo.frase + i)  = *(actualTInfo.frase + i);
+    }
+
+    auxTInfo.numLinha = actualTInfo.numLinha;
+    auxTInfo.linhaCorrente = TRUE;
+
+    *(pilha + *cabecaPilha) = auxTInfo;
+    *cabecaPilha += 1;
+
+    return OK;
+}
+
+int opearacaoUndo(TDLEnc *lista, TInfo *pilha, int *cabecaPilha)
+{
+    if (*cabecaPilha <= 0) {
+        return EXIT_FAILURE;
+    }
+    buscarAtomoCorrente(lista) -> info = *(pilha + *cabecaPilha - 1);
+    *cabecaPilha -= 1;
+    return OK;
+}
+
+int copiarListaParaAux(TDLEnc *auxLista, TDLEnc lista) {
+    return OK;
+}
+
 int ehCaracterValido(char *st)
 {
     for (int i = 0; *(st+i)!= '\0'; i++)
@@ -638,6 +670,35 @@ void pegarStringsEmAlterar(char *string, char *subString1, char *subString2)
     }
 }
 
+void pegarStringsEmDeletar(char *string, char *subString1)
+{
+    int posIni = 0;
+    int posDelimitador1 = encontrardelimitador(string, posIni);
+    int posDelimitador2 = encontrardelimitador(string, posDelimitador1 + 1);
+    int i = posDelimitador1 + 1, k = 0;
+    if (posDelimitador1 != -1 && posDelimitador2 != -1)
+    {
+        if (posDelimitador2 == posDelimitador1)
+        {
+            error(7);
+        }
+        else
+        {
+            for (; i < posDelimitador2; i++)
+            {
+                *(subString1+k) = *(string+i);
+                k++;
+            
+            }
+            *(subString1+k) = '\0';
+        }
+    }
+    else
+    {
+       error(7);
+    }
+}
+
 void pegarPosicaoString(TAtomo *paux, char *subs, int *posInicial, int *posFinal)
 {
 
@@ -745,6 +806,88 @@ void alterarString(TDLEnc *lista, char *subString1, char *subString2)
     }
 }
 
+
+void deletarString(TDLEnc *lista, char *subString1)
+{
+    char *subString2 = (char *)(malloc(sizeof(char) * 2));
+    *(subString2) = '\0';
+
+    TAtomo *paux = buscarAtomoCorrente(lista);
+    if (paux == NULL)
+    {
+        error(8);
+    }
+    else
+    {
+        if (*subString1 == '\0' && *subString2 == '\0')
+        {
+            error(7);
+        }
+        else
+        {
+
+            char *texto = (char*)(malloc(sizeof(char)*MAX));;
+            int posInicial = 0, posFinal = 0, j = 0, i = 0, k = 0, flagParagem = 0, f = 0;
+            int tamString = strlen(paux->info.frase), tamString2 = 0;
+
+            pegarPosicaoString(paux, subString1, &posInicial, &posFinal);
+
+            if (posInicial != posFinal)
+            {
+                posInicial = 0;
+                posFinal = 0;
+
+                while (flagParagem == 0)
+                {
+                    pegarPosicaoString(paux, subString1, &posInicial, &posFinal);
+
+                    if (posInicial != posFinal)
+                    {
+                        for (; i < posInicial; i++)
+                        {
+                            *(texto+k) = *(paux->info.frase + i);
+                            k++;
+                        }
+
+                        for (j = 0; j < strlen(subString2); j++)
+                        {
+                            *(texto+k) = *(subString2+j);
+                            k++;
+                        }
+                    }
+                    else
+                    {
+                        for (int c = posInicial; c < tamString; c++)
+                        {
+                            *(texto+k) = *(paux->info.frase+c);
+                            k++;
+                        }
+                        *(texto+k) = '\0';
+                        flagParagem = 1;
+                        break;
+                    }
+
+                    if (posInicial != posFinal)
+                    {
+                        i = posFinal;
+                        posInicial = posFinal;
+                    }
+                }
+
+                tamString2 = strlen(texto);
+                for (f = 0; f < tamString2; f++)
+                {
+                    *(paux->info.frase+f) = *(texto+f);
+                }
+                *(paux->info.frase+f) = '\0';
+            }
+            else
+            {
+                warning(0);
+            }
+        }
+    }
+}
 
 TAtomo *pegarAtomoDadaChave(TDLEnc *lista, int numLinha)
 {
